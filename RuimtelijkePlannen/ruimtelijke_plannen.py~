@@ -305,7 +305,7 @@ class RuimtelijkePlannen:
                 print 'invalid layer'
                 
         vlayer.selectAll()
-        canvas = self.iface.mapCanvas()
+        canvas = iface.mapCanvas()
         canvas.zoomToSelected(vlayer)
         vlayer.removeSelection()
 
