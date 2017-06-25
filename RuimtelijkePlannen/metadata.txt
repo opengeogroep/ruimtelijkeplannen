@@ -9,9 +9,10 @@
 [general]
 name=Ruimtelijke Plannen
 qgisMinimumVersion=2.0
+qgisMaximumVersion=2.99
 description=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl
 version=0.1
-author=OpenGeoGroep
+author=Jos Rijborz - Provincie Zeeland, Raymond Nijssen - OpenGeoGroep
 email=info@opengeogroep.nl
 
 about=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl
@@ -26,7 +27,7 @@ repository=https://github.com/opengeogroep/ruimtelijkeplannen
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=RO-Online ruimtelijkeplannen.nl Ruimtelijke Plannen Bestemmingsplan zoning plans
+tags=RO-Online ruimtelijkeplannen.nl Ruimtelijke Plannen Bestemmingsplan zoning plans IMRO
 
 homepage=https://github.com/opengeogroep/ruimtelijkeplannen
 category=Web

@@ -24,7 +24,7 @@ from qgis.core import QgsProject, QgsVectorLayer, QgsMapLayerRegistry
 from PyQt4.QtCore import Qt, QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt4.QtGui import QAction, QIcon, QLineEdit, QSortFilterProxyModel, \
     QAbstractItemView, QStandardItemModel, QStandardItem, QCompleter, \
-    QStringListModel
+    QStringListModel, QMessageBox, QHeaderView
 # Initialize Qt resources from file resources.py
 import resources
 # Import the code for the dialog
@@ -199,8 +199,9 @@ class RuimtelijkePlannen:
 
         self.dlg.lineEdit.setPlaceholderText("Bestemmingsplan code")
         self.dlg.lineEdit_address.setPlaceholderText("zoek op adres")
-        self.dlg.lineEdit.textChanged.connect(self.filterBestemmingsplannen)
-        self.dlg.lineEdit_address.textChanged.connect(self.filterAddresses)
+        #self.dlg.lineEdit.textChanged.connect(self.filterBestemmingsplannen)
+        #self.dlg.lineEdit_address.textChanged.connect(self.filterAddresses)
+        self.dlg.lineEdit.returnPressed.connect(self.filterBestemmingsplannen)
         self.dlg.lineEdit_address.returnPressed.connect(self.getBestemmingsplannenByAddress)
         self.dlg.treeView.doubleClicked.connect(self.loadBestemmingsplan)
 
@@ -357,7 +358,7 @@ class RuimtelijkePlannen:
             self.sourceModel.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
             self.sourceModel.setHeaderData(1, Qt.Horizontal, "Naam")
             self.dlg.treeView.resizeColumnsToContents()
-            self.dlg.treeView.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+            self.dlg.treeView.horizontalHeader().setResizeMode(1, QHeaderView.Stretch)
             self.dlg.treeView.selectRow(0)
         else:
             QMessageBox.warning(self.iface.mainWindow(), "Bestemmingsplan", ( \
