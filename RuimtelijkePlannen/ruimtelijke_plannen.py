@@ -182,37 +182,38 @@ class RuimtelijkePlannen:
         self.toolbar.addWidget(self.toolbarSearch)
         self.toolbarSearch.returnPressed.connect(self.searchBestemmingsplanFromToolbar)
 
-        url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/id/NL.IMRO.0687"
-        response = urllib.urlopen(url)
-        self.pdok = json.loads(response.read())
+        # skip initial load for now
+        #url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/id/NL.IMRO.0687"
+        #response = urllib.urlopen(url)
+        #self.pdok = json.loads(response.read())
 
         self.proxyModel = QSortFilterProxyModel()
         self.sourceModel = QStandardItemModel()
         self.proxyModel.setSourceModel(self.sourceModel)
     
-        self.dlg.treeView.setModel(self.proxyModel)
-        self.dlg.treeView.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.dlg.treeView_results.setModel(self.proxyModel)
+        self.dlg.treeView_results.setEditTriggers(QAbstractItemView.NoEditTriggers)
 
-        for service in self.pdok["idns"]:
-            itemLayername = QStandardItem( service )
-            self.sourceModel.appendRow( itemLayername )
+        #for service in self.pdok["idns"]:
+        #    itemLayername = QStandardItem( service )
+        #    self.sourceModel.appendRow( itemLayername )
 
-        self.dlg.lineEdit.setPlaceholderText("Bestemmingsplan code")
+        self.dlg.lineEdit_id.setPlaceholderText("Bestemmingsplan code")
         self.dlg.lineEdit_address.setPlaceholderText("zoek op adres")
-        #self.dlg.lineEdit.textChanged.connect(self.filterBestemmingsplannen)
+        #self.dlg.lineEdit_id.textChanged.connect(self.filterBestemmingsplannen)
         #self.dlg.lineEdit_address.textChanged.connect(self.filterAddresses)
-        self.dlg.lineEdit.returnPressed.connect(self.filterBestemmingsplannen)
+        self.dlg.lineEdit_id.returnPressed.connect(self.filterBestemmingsplannen)
         self.dlg.lineEdit_address.returnPressed.connect(self.getBestemmingsplannenByAddress)
-        self.dlg.treeView.doubleClicked.connect(self.loadBestemmingsplan)
+        self.dlg.treeView_results.doubleClicked.connect(self.loadBestemmingsplan)
 
-        self.sourceModel.setHeaderData(0, Qt.Horizontal, "Bestemmingsplan")
-        self.sourceModel.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
-        self.sourceModel.setHeaderData(1, Qt.Horizontal, "Naam")
-        self.dlg.treeView.resizeColumnsToContents()
-        completer = QCompleter()
-        self.dlg.lineEdit_address.setCompleter(completer) 
-        self.stringModel = QStringListModel()
-        completer.setModel(self.stringModel)
+        #self.sourceModel.setHeaderData(0, Qt.Horizontal, "Bestemmingsplan")
+        #self.sourceModel.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
+        #self.sourceModel.setHeaderData(1, Qt.Horizontal, "Naam")
+        #self.dlg.treeView_results.resizeColumnsToContents()
+        #completer = QCompleter()
+        #self.dlg.lineEdit_address.setCompleter(completer) 
+        #self.stringModel = QStringListModel()
+        #completer.setModel(self.stringModel)
 
 
 
@@ -242,10 +243,10 @@ class RuimtelijkePlannen:
             pass
             
 
-    def filterAddresses(self, string):
-        if string:
+    def filterAddresses(self, search_string):
+        if len(search_string) > 0:
             self.sourceModel.clear()
-            url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/geocodertokens/" + string
+            url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/geocodertokens/" + search_string
             response = urllib.urlopen(url)
             self.pdok = json.loads(response.read())
 
@@ -272,9 +273,9 @@ class RuimtelijkePlannen:
     def searchBestemmingsplanFromToolbar(self):
         self.geocode(self.toolbarSearch.text())
 
-    def geocode(self, string):
+    def geocode(self, search_string):
         self.toolbarSearch.clear()
-        self.addBestemmingsplan(string)
+        self.addBestemmingsplan(search_string)
 
     def addBestemmingsplan(self, plangebied):
         service = 'http://afnemers.ruimtelijkeplannen.nl/afnemers2012/services'
@@ -317,34 +318,37 @@ class RuimtelijkePlannen:
             
             self.sourceModel.appendRow( [ layerId, layernaam ] )
 
-    def filterBestemmingsplannen(self, string):
-        if string:
-            self.dlg.treeView.selectRow(0)
+    def filterBestemmingsplannen(self):
+        search_string = self.dlg.lineEdit_id.text();
+        print(search_string)
+        if len(search_string) > 0:
+            self.dlg.treeView_results.selectRow(0)
             self.sourceModel.clear()
 
-            url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/id/" + string
+            url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/id/" + search_string
             response = urllib.urlopen(url)
             self.pdok = json.loads(response.read())
                 
+            print len(self.pdok["idns"])
             for service in self.pdok["idns"]:
-                itemLayername = QStandardItem( service )
-                self.sourceModel.appendRow( itemLayername )
+                itemLayername = QStandardItem(service)
+                self.sourceModel.appendRow(itemLayername)
 
             self.sourceModel.setHeaderData(0, Qt.Horizontal, "Bestemmingsplan")
             self.sourceModel.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
             self.sourceModel.setHeaderData(1, Qt.Horizontal, "Naam")
-            self.dlg.treeView.resizeColumnsToContents()
-            self.dlg.treeView.selectRow(0)
+            self.dlg.treeView_results.resizeColumnsToContents()
+            self.dlg.treeView_results.selectRow(0)
 
     def loadBestemmingsplan(self, index):
         self.dlg.hide()
-        self.addBestemmingsplan( index.data() )
-        self.dlg.lineEdit.clear()
+        self.addBestemmingsplan(index.data())
+        self.dlg.lineEdit_id.clear()
         
 
     def getBestemmingsplannenByAddress(self):
         address = pdokgeocoder.search(self.dlg.lineEdit_address.text())
-        if not len (address) == 0:
+        if len(address) > 0:
             data = address[0];
             self.sourceModel.clear()
             url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/xy/" + str(data['x']) + "/" + str(data['y'])
@@ -357,9 +361,9 @@ class RuimtelijkePlannen:
             self.sourceModel.setHeaderData(0, Qt.Horizontal, "Bestemmingsplan")
             self.sourceModel.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
             self.sourceModel.setHeaderData(1, Qt.Horizontal, "Naam")
-            self.dlg.treeView.resizeColumnsToContents()
-            self.dlg.treeView.horizontalHeader().setResizeMode(1, QHeaderView.Stretch)
-            self.dlg.treeView.selectRow(0)
+            self.dlg.treeView_results.resizeColumnsToContents()
+            self.dlg.treeView_results.horizontalHeader().setResizeMode(1, QHeaderView.Stretch)
+            self.dlg.treeView_results.selectRow(0)
         else:
             QMessageBox.warning(self.iface.mainWindow(), "Bestemmingsplan", ( \
                 "Niets gevonden. Probeer een andere spelling of alleen postcode/huisnummer."
