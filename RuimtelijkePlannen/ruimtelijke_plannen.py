@@ -20,7 +20,8 @@
  *                                                                         *
  ***************************************************************************/
 """
-from qgis.core import QgsProject, QgsVectorLayer, QgsMapLayerRegistry
+from qgis.core import QgsProject, QgsVectorLayer, QgsMapLayerRegistry, \
+    QgsGeometry
 from PyQt4.QtCore import Qt, QSettings, QTranslator, qVersion, QCoreApplication
 from PyQt4.QtGui import QAction, QIcon, QLineEdit, QSortFilterProxyModel, \
     QAbstractItemView, QStandardItemModel, QStandardItem, QCompleter, \
@@ -72,6 +73,9 @@ class RuimtelijkePlannen:
         # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'RuimtelijkePlannen')
         self.toolbar.setObjectName(u'RuimtelijkePlannen')
+        
+        self.geolocator = pdokgeocoder.PDOKGeoLocator(self.iface)
+
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -347,11 +351,16 @@ class RuimtelijkePlannen:
         
 
     def getBestemmingsplannenByAddress(self):
-        address = pdokgeocoder.search(self.dlg.lineEdit_address.text())
-        if len(address) > 0:
-            data = address[0];
+        addresses = self.geolocator.search(self.dlg.lineEdit_address.text())
+        if len(addresses) > 0:
+            address = addresses[0];
+            address_loc = address['centroide_rd']
+            geom = QgsGeometry.fromWkt(address_loc)
+            x = geom.asPoint().x()
+            y = geom.asPoint().y()
+
             self.sourceModel.clear()
-            url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/xy/" + str(data['x']) + "/" + str(data['y'])
+            url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/xy/" + str(x) + "/" + str(y)
             response = urllib.urlopen(url)
             self.pdok = json.loads(response.read())
 

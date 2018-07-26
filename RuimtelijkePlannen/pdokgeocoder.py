@@ -1,9 +1,10 @@
 import json
-import os
-import urllib
-import urllib2
-from xml.dom.minidom import parse
-from PyQt4 import QtCore
+import copy
+from networkaccessmanager import NetworkAccessManager, RequestsException
+from qgis.core import QgsMessageLog
+
+#from xml.dom.minidom import parse
+#from qgis.PyQt import QtCore
 
 searchstring = 'riouwstaat, haarlem'
 #searchstring = 'kenaustraat 12, haarlem'
@@ -20,134 +21,207 @@ searchstring = 'riouwstraat 23'
 #searchstring = '2022ZJ'
 #searchstring = '2022ZJ 23'
 
-# Set Proxy from QGIS-Settings
-def setup_urllib2():
-    # TODO: test with different proxy settings
-    settings = QtCore.QSettings()
 
-    if settings.value( "proxy/proxyEnabled", 'false' ) == 'false':
-        # no action needed
-        pass
-    else:
-        # set up for using the actual proxy
-        proxyHost = str(settings.value("proxy/proxyHost", unicode()))
-        proxyPassword = str(settings.value("proxy/proxyPassword", unicode()))
-        proxyPort = str(settings.value("proxy/proxyPort", unicode()))
-        proxyType = str(settings.value("proxy/proxyType", unicode()))
-        proxyTypes = { 'DefaultProxy' : 'http', 'HttpProxy' : 'http', 'Socks5Proxy' : 'socks', 'HttpCachingProxy' : 'http', 'FtpCachingProxy' : 'ftp' }
-        if proxyType in proxyTypes: 
-            proxyType = proxyTypes[proxyType]
-        proxyUser = str(settings.value("proxy/proxyUser", unicode()))
-        proxyString = 'http://' + proxyUser + ':' + proxyPassword + '@' + proxyHost + ':' + proxyPort
-        proxy = urllib2.ProxyHandler({proxyType : proxyString})
-        auth = urllib2.HTTPBasicAuthHandler()
-        opener = urllib2.build_opener(proxy, auth, urllib2.HTTPHandler)
-        urllib2.install_opener(opener)
+class PDOKGeoLocator:
+
+    LOCATIESERVER_BASE_URL = 'https://geodata.nationaalgeoregister.nl/locatieserver/v3'
+
+    def __init__(self, iface):
+        self.nam = NetworkAccessManager()
+        #self.canvas = iface.mapCanvas()
 
 
-def search(searchstring):
-    """
+    def search(self, searchstring, fq=''):
+        # https://github.com/PDOK/locatieserver/wiki/API-Locatieserver
+        url = '{}/free?q={}&rows=20{}'.format(self.LOCATIESERVER_BASE_URL, searchstring, fq)
+        self.info(url)
+        addressesarray = []
+        try:
+            # TODO: Provide a valid HTTP Referer or User-Agent identifying the application (QGIS geocoder)
+            (response, content) = self.nam.request(url)
+            #print('xx response: {}'.format(response))
+            # TODO: check statuscode etc in RESPONSE
+            #print('xx content: {}'.format(content))
 
-    :param searchstring:
-    """
-    # be carefull NO spaces in it: urllib2 will think these are two urls and choke
-    # in QGIS 1.8 searchstring will be a QString, that is why we cast to string
-    url = "http://geodata.nationaalgeoregister.nl/geocoder/Geocoder?zoekterm=" + urllib.quote_plus(unicode(searchstring))
-    #url = "http://www.geocoders.nl/places?format=xml&address=" + urllib.quote_plus(searchstring)
-    #print url
-    addressesarray = []
-    try:
-        setup_urllib2()
-        response = urllib2.urlopen(url)
-        if response.code != 200:
-            print 'ERROR %s' % response.code
-            exit()
-        doc = parse(response)
+            content_string = content.decode('utf-8')
+            obj = json.loads(content_string)
+            docs = obj['response']['docs']
+            for doc in docs:
+                #print(doc)
+                straat = ''
+                nummer = ''
+                postcode = ''
+                plaats = ''
+                gemeente = doc['gemeentenaam']
+                provincie = doc['provincienaam']
+                x = ''
+                y = ''
+                centroide_rd = doc['centroide_rd']
+                if doc['type'] == 'adres':
+                    adrestekst = 'adres: ' + doc['weergavenaam']
+                    nummer = doc['huis_nlt']  # huis_nlt  = huisnummer + letter/toevoeging
+                    straat = doc['straatnaam']
+                    if 'postcode' in doc:  # optional ?
+                        postcode = doc['postcode']
+                    plaats = doc['woonplaatsnaam']
+                elif doc['type'] == 'weg':
+                    adrestekst = 'straat: ' + doc['weergavenaam']
+                    straat = doc['straatnaam']
+                    if 'woonplaatsnaam' in doc:
+                        plaats = doc['woonplaatsnaam']
+                    if 'gemeentenaam' in doc:
+                        plaats = doc['gemeentenaam']
+                elif doc['type'] == 'postcode':
+                    adrestekst = 'postcode: ' + doc['weergavenaam']
+                    postcode = doc['postcode']
+                    straat = doc['straatnaam']
+                    plaats = doc['woonplaatsnaam']
+                elif doc['type'] == 'woonplaats':
+                    adrestekst = 'plaats: ' + doc['woonplaatsnaam']
+                    plaats = doc['woonplaatsnaam']
+                elif doc['type'] == 'gemeente':
+                    adrestekst = 'gemeente: ' + doc['gemeentenaam']
 
-        addresses = doc.getElementsByTagName("xls:GeocodedAddress")
-        for address in addresses:
-            street = u""
-            building = u""
-            streetAddress = address.getElementsByTagName("xls:StreetAddress")
-            if len(streetAddress)>0:
-                streetAddress = streetAddress[0]
-                street = streetAddress.getElementsByTagName("xls:Street")
-                if len(street)>0:
-                    street = street[0].firstChild.nodeValue
-                else:
-                    street = u""
-                building = streetAddress.getElementsByTagName("xls:Building")
-                if len(building)>0:
-                    building = building[0]
-                    number = building.getAttribute("number")
-                    subdivision = building.getAttribute("subdivision")
-                    building = number+subdivision
-                else:
-                    building = u""
-            postalcode = address.getElementsByTagName("xls:PostalCode")
-            if len(postalcode)>0:
-                postalcode = postalcode[0].firstChild.nodeValue
-            else:
-                postalcode = u""
-            plaats = u""
-            gemeente = u""
-            provincie = u""
-            places = address.getElementsByTagName("xls:Place")
-            for place in places:
-                if place.getAttribute("type")=="CountrySubdivision":
-                    prov = place.firstChild.nodeValue
-                if place.getAttribute("type")=="Municipality":
-                    gemeente = place.firstChild.nodeValue
-                if place.getAttribute("type")=="MunicipalitySubdivision":
-                    plaats = place.firstChild.nodeValue
-            pos = address.getElementsByTagName("gml:pos")[0].firstChild.nodeValue
-            # if total_address is correctly written xmlTag exists:
-            if pos:
-                remark=True
-                # split X and Y coordinate in list
-                XY = pos.split()
-                if XY:
-                    x = float(XY[0])
-                    y = float(XY[1])
-                    #print "point: " + str(x) + ", " + str(y)
-            adres = ""
-            if len(street)>0:
-                # sometimes we only get gemeente
-                plaatsgemeente = plaats
-                if len(plaatsgemeente)==0:
-                    plaatsgemeente = gemeente
-                if len(building)>0:
-                    adres = 'adres: ' + (street + " " + building + " " + postalcode + " " + plaatsgemeente + " " + prov).replace('  ',' ')
-                else:
-                    adres = 'straat: ' + (street + " " + building + " " + postalcode  + " " + plaatsgemeente + " " + prov).replace('  ',' ')
-            elif len(plaats)>0:
-                adres = 'plaats: '+ (plaats + " (" + gemeente + ") in " + prov).replace('  ',' ')
-            elif len(gemeente)>0:
-                adres = 'gemeente: ' +(gemeente + " in " + prov).replace('  ',' ')
-            elif len(prov)>0:
-                adres = 'provincie: ' + prov
-            #print adres.strip().replace('  ',' ') + ' ('+str(x) + ", " + str(y)+')'
-            if isinstance(adres, str) or isinstance(adres, unicode):
-                adres = adres.strip().replace('  ',' ')
-            else:
-                # QGIS 1.8
-                adres = adres.simplified()
+                addressdict = {
+                    'straat': straat,
+                    'nummer': nummer,
+                    'postcode': postcode,
+                    'plaats': plaats,
+                    'gemeente': gemeente,
+                    'provincie': provincie,
+                    'x': x,
+                    'y': y,
+                    'centroide_rd': centroide_rd,
+                    'adrestekst': adrestekst
+                }
+                addressesarray.append(addressdict)
 
-            addressdict = {
-                'straat':street,
-                'adres':building,
-                'postcode':postalcode,
-                'plaats':plaats,
-                'gemeente':gemeente,
-                'provincie':prov,
-                'x':x,
-                'y':y,
-                'adrestekst': adres
+        except RequestsException:
+            # Handle exception
+            #errno, strerror = RequestsException.args
+            #print('!!!!!!!!!!! EXCEPTION !!!!!!!!!!!!!: \n{}\n{}'. format(errno, strerror))
+            pass
+
+        return addressesarray
+
+    def info(self, msg=""):
+        QgsMessageLog.logMessage(unicode('{}').format(msg), 'PDOK-services Plugin', QgsMessageLog.INFO)
+
+    def suggest(self, searchstring, fq=''):
+        url = unicode('{}/suggest?q={}&rows=20{}').format(self.LOCATIESERVER_BASE_URL, searchstring, fq)
+        self.info(url)
+        # {"response": {
+        #   "numFound": 21,
+        #   "start": 0,
+        #   "maxScore": 18.388767,
+        #   "docs": [
+        #      { "type": "postcode",
+        #        "weergavenaam": "Riouwstraat, 2022ZJ Haarlem",
+        #        "id":"pcd - c0a1d71a53a3977ca4ed8f9180482942",
+        #        "score":18.388767},
+        #      { "type":"adres",
+        #        "weergavenaam":"Riouwstraat 1, 2022ZJ Haarlem",
+        #        "id":"adr-521e3fb0b4343d92b2e47f869071ed5e",
+        #        "score":13.6195135}
+        #    }
+        #
+        resultsarray = []
+        try:
+            # TODO: Provide a valid HTTP Referer or User-Agent identifying the application (QGIS geocoder)
+            (response, content) = self.nam.request(url)
+            #print('xx response: {}'.format(response))
+            # TODO: check statuscode etc in RESPONSE
+            #print('xx content: {}'.format(content))
+
+            content_string = content.decode('utf-8')
+            obj = json.loads(content_string)
+            docs = obj['response']['docs']
+            for doc in docs:
+                #print(doc)
+                adrestekst = doc['weergavenaam']
+                type = doc['type']
+                id = doc['id']
+                score = doc['score']
+                resultdict = {
+                    'adrestekst': adrestekst,
+                    'type': type,
+                    'id': id,
+                    'score': score
+                }
+                resultsarray.append(resultdict)
+
+        except RequestsException:
+            # Handle exception
+            #errno, strerror = RequestsException.args
+            #print('!!!!!!!!!!! EXCEPTION !!!!!!!!!!!!!: \n{}\n{}'. format(errno, strerror))
+            pass
+
+        return resultsarray
+
+    def lookup(self, idstring):
+        url = '{}/lookup?id={}'.format(self.LOCATIESERVER_BASE_URL, idstring)
+        self.info(url)
+        # https://geodata.nationaalgeoregister.nl/locatieserver/v3/lookup?id=adr-521e3fb0b4343d92b2e47f869071ed5e
+
+        # {"response": {
+        #   "numFound": 1,
+        #   "start": 0,
+        #   "maxScore": 15.695365,
+        #   "docs": [
+        #     {
+        #       "bron": "BAG",
+        #       "woonplaatscode": "2907",
+        #       "type": "adres",
+        #       "woonplaatsnaam": "Haarlem",
+        #       "huis_nlt": "1",
+        #       "openbareruimtetype": "Weg",
+        #       "gemeentecode": "0392",
+        #       "weergavenaam": "Riouwstraat 1, 2022ZJ Haarlem",
+        #       "straatnaam_verkort": "Riouwstr",
+        #       "id": "adr-521e3fb0b4343d92b2e47f869071ed5e",
+        #       "gekoppeld_perceel": ["STN01-B-7838"],
+        #       "gemeentenaam": "Haarlem",
+        #       "identificatie": "0392010000053203-0392200000053203",
+        #       "openbareruimte_id": "0392300000011160",
+        #       "provinciecode": "PV27",
+        #       "postcode": "2022ZJ",
+        #       "provincienaam": "Noord-Holland",
+        #       "centroide_ll": "POINT(4.64739941 52.39738762)",
+        #       "nummeraanduiding_id": "0392200000053203",
+        #       "adresseerbaarobject_id": "0392010000053203",
+        #       "huisnummer": 1,
+        #       "provincieafkorting": "NH",
+        #       "centroide_rd": "POINT(104647.676 490206.575)",
+        #       "straatnaam": "Riouwstraat"}
+        #   ]}}
+
+        result = {}
+        try:
+            # TODO: Provide a valid HTTP Referer or User-Agent identifying the application (QGIS geocoder)
+            (response, content) = self.nam.request(url)
+            #print('xx response: {}'.format(response))
+            # TODO: check statuscode etc in RESPONSE
+            #print('xx content: {}'.format(content))
+
+            content_string = content.decode('utf-8')
+            obj = json.loads(content_string)
+            doc = obj['response']['docs'][0]
+            # print(doc)
+            centroide_rd = doc['centroide_rd']
+            type = doc['type']
+            adrestekst = '{}: {}'.format(doc['type'], doc['weergavenaam'])
+            data = copy.deepcopy(doc)
+            result = {
+                'centroide_rd': centroide_rd,
+                'adrestekst': adrestekst,
+                'type': type,
+                'data': data
             }
-            addressesarray.append(addressdict)
-    except Exception, e:
-        print e
-    return addressesarray
 
-if __name__ == "__main__":
-    search(searchstring)
+        except RequestsException:
+            # Handle exception
+            # errno, strerror = RequestsException.args
+            # print('!!!!!!!!!!! EXCEPTION !!!!!!!!!!!!!: \n{}\n{}'. format(errno, strerror))
+            pass
+
+            return result

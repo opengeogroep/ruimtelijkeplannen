@@ -47,7 +47,8 @@ PY_FILES = \
 	__init__.py \
 	ruimtelijke_plannen.py \
 	ruimtelijke_plannen_dialog.py \
-	pdokgeocoder.py
+	pdokgeocoder.py \
+	networkaccessmanager.py
 
 UI_FILES = ruimtelijke_plannen_dialog_base.ui
 
