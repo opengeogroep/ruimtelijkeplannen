@@ -1,17 +1,18 @@
 # This file contains metadata for your plugin. Since 
 # version 2.0 of QGIS this is the proper way to supply 
 # information about a plugin. The old method of 
-# embedding metadata in __init__.py will 
+# embedding metadata in __init__.py 
 # is no longer supported since version 2.0.
 
-# This file should be included when you package your plugin.# Mandatory items:
+# This file should be included when you package your plugin.
+# Mandatory items:
 
 [general]
 name=Ruimtelijke Plannen
 qgisMinimumVersion=2.0
-qgisMaximumVersion=2.99
+qgisMaximumVersion=2.98
 description=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl
-version=0.1
+version=0.2
 author=Jos Rijborz - Provincie Zeeland, Raymond Nijssen - OpenGeoGroep
 email=info@opengeogroep.nl
 
@@ -27,7 +28,7 @@ repository=https://github.com/opengeogroep/ruimtelijkeplannen
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=RO-Online ruimtelijkeplannen.nl Ruimtelijke Plannen Bestemmingsplan zoning plans IMRO
+tags=RO-Online,ruimtelijkeplannen.nl,Ruimtelijke,Plannen,Bestemmingsplan,zoning plans,IMRO
 
 homepage=https://github.com/opengeogroep/ruimtelijkeplannen
 category=Web
