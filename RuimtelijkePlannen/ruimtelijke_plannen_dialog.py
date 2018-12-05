@@ -23,13 +23,13 @@
 
 import os
 
-from PyQt4 import QtGui, uic
+from qgis.PyQt import QtGui, uic, QtWidgets
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ruimtelijke_plannen_dialog_base.ui'))
 
 
-class RuimtelijkePlannenDialog(QtGui.QDialog, FORM_CLASS):
+class RuimtelijkePlannenDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, parent=None):
         """Constructor."""
         super(RuimtelijkePlannenDialog, self).__init__(parent)

@@ -20,24 +20,75 @@
  *                                                                         *
  ***************************************************************************/
 """
-from qgis.core import QgsProject, QgsVectorLayer, QgsMapLayerRegistry, \
-    QgsGeometry
-from PyQt4.QtCore import Qt, QSettings, QTranslator, qVersion, QCoreApplication
-from PyQt4.QtGui import QAction, QIcon, QLineEdit, QSortFilterProxyModel, \
-    QAbstractItemView, QStandardItemModel, QStandardItem, QCompleter, \
-    QStringListModel, QMessageBox, QHeaderView
-# Initialize Qt resources from file resources.py
-import resources
-# Import the code for the dialog
-from ruimtelijke_plannen_dialog import RuimtelijkePlannenDialog
 
+from __future__ import print_function
+from __future__ import absolute_import
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
+
+from qgis.gui import QgsMapTool
+from qgis.core import   QgsProject, QgsVectorLayer, QgsLayerTreeLayer, \
+                        QgsGeometry, QgsMessageLog
+from qgis.PyQt import QtCore
+from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, \
+                             QSortFilterProxyModel
+
+from qgis.PyQt.QtWidgets import QAction, QLineEdit, QAbstractItemView, \
+                                QCompleter, QMessageBox, QHeaderView, QApplication
+from qgis.PyQt.QtGui import QIcon, QStandardItemModel, QStandardItem, QPixmap, QCursor
+
+# Initialize Qt resources from file resources.py
+from . import resources
+# Import the code for the dialog
+from .ruimtelijke_plannen_dialog import RuimtelijkePlannenDialog
+
+import json
 import os.path
 import urllib
-import json
-import pdokgeocoder
+
+from .network import networkaccessmanager
+
+class GetPointTool(QgsMapTool):
+
+    def __init__(self, canvas, callback):
+        QgsMapTool.__init__(self, canvas)
+        self.callback = callback
+        self.canvas = canvas
+        self.cursor = QCursor(QPixmap(
+            ["16 16 4 1", 
+             "  c None", ". c #7198d7", "+ c #7198d7", "- c #7198d7",
+                                    "                ",
+                                    "                ",
+                                    "      +++++     ",
+                                    "     +++++++    ",
+                                    "    +.     .+   ",
+                                    "   +.   -   .+  ",
+                                    "  +.   ---   .+ ",
+                                    " ++.  -----  .++",
+                                    " ++  -------  ++",
+                                    " ++.  -----  .++",
+                                    "  +.   ---   .+ ",
+                                    "   +.   -   .+  ",
+                                    "   ++.     .+   ",
+                                    "    ++++++++    ",
+                                    "      +++++     ",
+                                    "                "]))
+
+    def canvasPressEvent(self, e):
+        if e.button() == QtCore.Qt.LeftButton:
+            self.pos = self.toMapCoordinates(e.pos())
+
+    def canvasReleaseEvent(self, e):
+        if e.button() == QtCore.Qt.LeftButton:
+            self.callback(e)
+
+    def activate(self):
+        self.canvas.setCursor(self.cursor)
 
 
-class RuimtelijkePlannen:
+class RuimtelijkePlannen(object):
     """QGIS Plugin Implementation."""
 
     def __init__(self, iface):
@@ -48,8 +99,9 @@ class RuimtelijkePlannen:
             application at run time.
         :type iface: QgsInterface
         """
-        # Save reference to the QGIS interface
+        # Save reference to the QGIS interface and the mapCanvas
         self.iface = iface
+        self.mapcanvas = iface.mapCanvas()
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
@@ -66,18 +118,16 @@ class RuimtelijkePlannen:
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
 
-
         # Declare instance attributes
         self.actions = []
         self.menu = self.tr(u'&Ruimtelijke Plannen')
-        # TODO: We are going to let the user set this up in a future iteration
         self.toolbar = self.iface.addToolBar(u'RuimtelijkePlannen')
         self.toolbar.setObjectName(u'RuimtelijkePlannen')
         
-        self.geolocator = pdokgeocoder.PDOKGeoLocator(self.iface)
+        self.nam = networkaccessmanager.NetworkAccessManager()
+        self.project = QgsProject.instance()
 
 
-    # noinspection PyMethodMayBeStatic
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
 
@@ -89,12 +139,13 @@ class RuimtelijkePlannen:
         :returns: Translated version of message.
         :rtype: QString
         """
-        # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
+
         return QCoreApplication.translate('RuimtelijkePlannen', message)
 
 
     def add_action(
         self,
+        dialog,
         icon_path,
         text,
         callback,
@@ -143,8 +194,8 @@ class RuimtelijkePlannen:
         :rtype: QAction
         """
 
-        # Create the dialog (after translation) and keep reference
-        self.dlg = RuimtelijkePlannenDialog()
+        if dialog:
+            self.dlg = dialog
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
@@ -172,24 +223,28 @@ class RuimtelijkePlannen:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/RuimtelijkePlannen/icon.png'
-        self.add_action(
-            icon_path,
-            text=self.tr(u'Ruimtelijke plannen'),
-            callback=self.run,
-            parent=self.iface.mainWindow())
+        self.dlg = RuimtelijkePlannenDialog()
 
+        # add a button to click in map and find bestemmingsplannen
+        self.action = self.add_action(
+            dialog = None,
+            icon_path = ':/plugins/RuimtelijkePlannen/icon.png',
+            text=self.tr(u'Click map to open query RuimtelijkePlannen'),
+            callback=self.activate_tool,
+            add_to_menu=False,
+            status_tip=self.tr(u'Click map to open query RuimtelijkePlannen'),
+            parent=self.iface.mainWindow())
+        self.action.setCheckable(True)
+        # add it to the same group as the pan/zoom tools
+        self.iface.actionPan().actionGroup().addAction(self.action)
+        self.xytool = GetPointTool(self.mapcanvas, self.getBestemmingsplannenByPoint)
+            
         self.toolbarSearch = QLineEdit()
         self.toolbarSearch.setMaximumWidth(200)
-        self.toolbarSearch.setAlignment(Qt.AlignLeft)
+        self.toolbarSearch.setAlignment(QtCore.Qt.AlignLeft)
         self.toolbarSearch.setPlaceholderText("Bestemmingsplan code")
         self.toolbar.addWidget(self.toolbarSearch)
-        self.toolbarSearch.returnPressed.connect(self.searchBestemmingsplanFromToolbar)
-
-        # skip initial load for now
-        #url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/id/NL.IMRO.0687"
-        #response = urllib.urlopen(url)
-        #self.pdok = json.loads(response.read())
+        self.toolbarSearch.returnPressed.connect(self.addBestemmingsplanFromToolbar)
 
         self.proxyModel = QSortFilterProxyModel()
         self.sourceModel = QStandardItemModel()
@@ -197,31 +252,7 @@ class RuimtelijkePlannen:
     
         self.dlg.treeView_results.setModel(self.proxyModel)
         self.dlg.treeView_results.setEditTriggers(QAbstractItemView.NoEditTriggers)
-
-        #for service in self.pdok["idns"]:
-        #    itemLayername = QStandardItem( service )
-        #    self.sourceModel.appendRow( itemLayername )
-
-        self.dlg.lineEdit_id.setPlaceholderText("Bestemmingsplan code")
-        self.dlg.lineEdit_address.setPlaceholderText("zoek op adres")
-        #self.dlg.lineEdit_id.textChanged.connect(self.filterBestemmingsplannen)
-        #self.dlg.lineEdit_address.textChanged.connect(self.filterAddresses)
-        self.dlg.lineEdit_id.returnPressed.connect(self.filterBestemmingsplannen)
-        self.dlg.lineEdit_address.returnPressed.connect(self.getBestemmingsplannenByAddress)
         self.dlg.treeView_results.doubleClicked.connect(self.loadBestemmingsplan)
-
-        #self.sourceModel.setHeaderData(0, Qt.Horizontal, "Bestemmingsplan")
-        #self.sourceModel.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
-        #self.sourceModel.setHeaderData(1, Qt.Horizontal, "Naam")
-        #self.dlg.treeView_results.resizeColumnsToContents()
-        #completer = QCompleter()
-        #self.dlg.lineEdit_address.setCompleter(completer) 
-        #self.stringModel = QStringListModel()
-        #completer.setModel(self.stringModel)
-
-
-
-
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -230,61 +261,38 @@ class RuimtelijkePlannen:
                 self.tr(u'&Ruimtelijke Plannen'),
                 action)
             self.iface.removeToolBarIcon(action)
-        # remove the toolbar
         del self.toolbar
-
-
-    def run(self):
-        """Run method that performs all the real work"""
-        # show the dialog
-        self.dlg.show()
-        # Run the dialog event loop
-        result = self.dlg.exec_()
-        # See if OK was pressed
-        if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            pass
             
+    def activate_tool(self):
+        self.mapcanvas.setMapTool(self.xytool)
 
-    def filterAddresses(self, search_string):
-        if len(search_string) > 0:
-            self.sourceModel.clear()
-            url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/geocodertokens/" + search_string
-            response = urllib.urlopen(url)
-            self.pdok = json.loads(response.read())
-
-            self.stringList = [];
-            
-            for service in self.pdok:
-                self.stringList.append(service["adres"])
-
-            self.stringModel.setStringList(self.stringList)
-
-    def getWfsLayer(self, service, typename, filter):
+    def getWfsLayer(self, service, typename, wfs_filter):
         params = {
+            'service': 'WFS',
+            'version': '1.1.0',
+            'request': 'GetFeature',
             'typename': typename,
-            'filter': filter,
+            'filter': wfs_filter,
             'srsname': 'EPSG:28992',
         }
         if not service[-1] == '?':
             service += '?'
-        uri = service + urllib.unquote(urllib.urlencode(params))
+        uri = service + urllib.parse.unquote(urllib.parse.urlencode(params))
         layername = typename
         vlayer = QgsVectorLayer(uri, layername, "WFS")
         return vlayer
 
-    def searchBestemmingsplanFromToolbar(self):
-        self.geocode(self.toolbarSearch.text())
+    def addBestemmingsplanFromToolbar(self):
+        self.addFromIdn(self.toolbarSearch.text())
 
-    def geocode(self, search_string):
+    def addFromIdn(self, search_string):
         self.toolbarSearch.clear()
         self.addBestemmingsplan(search_string)
 
     def addBestemmingsplan(self, plangebied):
         service = 'http://afnemers.ruimtelijkeplannen.nl/afnemers2012/services'
+        wfs_filter = '"plangebied"=\'' + plangebied + '\''
         
-        filter = '"plangebied"=\'' + plangebied + '\''
         layers = [ \
         {u'name': u'app:Functieaanduiding', u'qml': 'functieaanduiding_digitaal.qml'}, \
         {u'name': u'app:Maatvoering', u'qml': 'maatvoering_digitaal.qml'}, \
@@ -294,21 +302,18 @@ class RuimtelijkePlannen:
         {u'name': u'app:Enkelbestemming', u'qml': 'enkelbestemming_imro_qgis.qml'}, \
         {u'name': u'app:Bestemmingsplangebied', u'qml': 'bestemmingsplangebied_imro_qgis.qml'}, \
         ]
-        
-        root = QgsProject.instance().layerTreeRoot()
-        bpName = plangebied
-        bpGroup = root.insertGroup(0, bpName)
-    
+
+        # add a layergroup to insert the layers in
+        bpGroup = QgsProject.instance().layerTreeRoot().insertGroup(0, plangebied)
         for layer in layers:
-            vlayer = self.getWfsLayer(service, layer[u'name'], filter)
+            vlayer = self.getWfsLayer(service, layer[u'name'], wfs_filter)
             if vlayer.isValid():
-                plugin_dir = os.path.dirname(os.path.abspath(__file__)) + '/styles'
-                layerQml = os.path.join(plugin_dir,layer[u'qml'])
+                layerQml = os.path.join(self.plugin_dir, 'styles', layer[u'qml'])
                 vlayer.loadNamedStyle(layerQml)
-                QgsMapLayerRegistry.instance().addMapLayer(vlayer, False)
-                node_vlayer = bpGroup.addLayer(vlayer)
+                self.project.addMapLayer(vlayer, False)
+                bpGroup.insertChildNode(-1, QgsLayerTreeLayer(vlayer))
             else:
-                print 'invalid layer'
+                QgsMessageLog.logMessage(u'Invalid Layer', u'RuimtelijkePlannen')
                 
         vlayer.selectAll()
         canvas = self.iface.mapCanvas()
@@ -317,63 +322,42 @@ class RuimtelijkePlannen:
 
     def addSourceRow(self, serviceLayer):
         if serviceLayer["tabFilter"] == 'JURIDISCH':
-            layerId = QStandardItem(serviceLayer["identificatie"])
-            layernaam = QStandardItem(serviceLayer["naam"])
-            
-            self.sourceModel.appendRow( [ layerId, layernaam ] )
-
-    def filterBestemmingsplannen(self):
-        search_string = self.dlg.lineEdit_id.text();
-        print(search_string)
-        if len(search_string) > 0:
-            self.dlg.treeView_results.selectRow(0)
-            self.sourceModel.clear()
-
-            url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/id/" + search_string
-            response = urllib.urlopen(url)
-            self.pdok = json.loads(response.read())
-                
-            print len(self.pdok["idns"])
-            for service in self.pdok["idns"]:
-                itemLayername = QStandardItem(service)
-                self.sourceModel.appendRow(itemLayername)
-
-            self.sourceModel.setHeaderData(0, Qt.Horizontal, "Bestemmingsplan")
-            self.sourceModel.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
-            self.sourceModel.setHeaderData(1, Qt.Horizontal, "Naam")
-            self.dlg.treeView_results.resizeColumnsToContents()
-            self.dlg.treeView_results.selectRow(0)
+            planId = QStandardItem(serviceLayer["identificatie"])
+            planNaam = QStandardItem(serviceLayer["naam"])
+            planType = QStandardItem(serviceLayer["typePlan"])
+            self.sourceModel.appendRow( [ planId, planType, planNaam ] )
 
     def loadBestemmingsplan(self, index):
         self.dlg.hide()
-        self.addBestemmingsplan(index.data())
-        self.dlg.lineEdit_id.clear()
+        self.addBestemmingsplan(index.sibling(index.row(),0).data())
         
+    def getBestemmingsplannenByPoint(self, event):
+        '''Queries ruimtelijkeplannen by point.'''
+        
+        x, y = self.mapcanvas.getCoordinateTransform().toMapCoordinates(
+                    event.pos().x(), event.pos().y())
+        # todo: what if not 28992?
+        # actual_crs_id = self.mapcanvas.mapRenderer().destinationCrs().authid()
+        
+        self.sourceModel.clear()
+        url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/xy/" \
+                + str(x) + "/" + str(y)
+        # hmm, this URL shows only a small subset of all plans in RP. Why?
 
-    def getBestemmingsplannenByAddress(self):
-        addresses = self.geolocator.search(self.dlg.lineEdit_address.text())
-        if len(addresses) > 0:
-            address = addresses[0];
-            address_loc = address['centroide_rd']
-            geom = QgsGeometry.fromWkt(address_loc)
-            x = geom.asPoint().x()
-            y = geom.asPoint().y()
+        QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)       # wait cursor
+        (response, content) = self.nam.request(url)
+        self.rp = json.loads(content.decode("utf-8"))
 
-            self.sourceModel.clear()
-            url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/xy/" + str(x) + "/" + str(y)
-            response = urllib.urlopen(url)
-            self.pdok = json.loads(response.read())
+        for plan in self.rp["plannen"]:
+            self.addSourceRow(plan)
 
-            for service in self.pdok["plannen"]:
-                self.addSourceRow(service)
-
-            self.sourceModel.setHeaderData(0, Qt.Horizontal, "Bestemmingsplan")
-            self.sourceModel.horizontalHeaderItem(0).setTextAlignment(Qt.AlignLeft)
-            self.sourceModel.setHeaderData(1, Qt.Horizontal, "Naam")
-            self.dlg.treeView_results.resizeColumnsToContents()
-            self.dlg.treeView_results.horizontalHeader().setResizeMode(1, QHeaderView.Stretch)
-            self.dlg.treeView_results.selectRow(0)
-        else:
-            QMessageBox.warning(self.iface.mainWindow(), "Bestemmingsplan", ( \
-                "Niets gevonden. Probeer een andere spelling of alleen postcode/huisnummer."
-                ), QMessageBox.Ok, QMessageBox.Ok)
+        self.sourceModel.setHeaderData(0, QtCore.Qt.Horizontal, "Identificatie")
+        self.sourceModel.horizontalHeaderItem(0).setTextAlignment(QtCore.Qt.AlignLeft)
+        self.sourceModel.setHeaderData(1, QtCore.Qt.Horizontal, "Type")
+        self.sourceModel.setHeaderData(2, QtCore.Qt.Horizontal, "Naam")
+        self.dlg.treeView_results.resizeColumnsToContents()
+        self.dlg.treeView_results.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
+        self.dlg.treeView_results.setSelectionMode(1)
+        self.dlg.treeView_results.selectRow(0)
+        QApplication.restoreOverrideCursor()                    # restore cursor
+        self.dlg.show()

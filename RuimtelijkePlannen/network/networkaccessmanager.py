@@ -2,11 +2,13 @@
 """
 ***************************************************************************
     An httplib2 replacement that uses QgsNetworkAccessManager
-    https://github.com/boundlessgeo/lib-qgis-commons/blob/master/qgiscommons2/network/networkaccessmanager.py
+
     ---------------------
     Date                 : August 2016
     Copyright            : (C) 2016 Boundless, http://boundlessgeo.com
     Email                : apasotti at boundlessgeo dot com
+    
+    Modified by         : Marco Duiker - MD-kwadraat (October 2018)
 ***************************************************************************
 *                                                                         *
 *   This program is free software; you can redistribute it and/or modify  *
@@ -17,26 +19,25 @@
 ***************************************************************************
 """
 
-
-import sys
-import os
-sys.path.append(os.path.dirname(__file__))
-
-from future import standard_library
-standard_library.install_aliases()
-#from builtins import str
-#from builtins import object
+from builtins import str
+from builtins import object
 
 __author__ = 'Alessandro Pasotti'
 __date__ = 'August 2016'
 
 import re
+import io
 import urllib.request, urllib.error, urllib.parse
 
 from qgis.PyQt.QtCore import pyqtSlot, QUrl, QEventLoop, QTimer, QCoreApplication
 from qgis.PyQt.QtNetwork import QNetworkRequest, QNetworkReply
 
-from qgis.core import QgsNetworkAccessManager, QgsMessageLog
+from qgis.core import (
+    QgsApplication,
+    QgsNetworkAccessManager,
+    QgsAuthManager,
+    QgsMessageLog
+)
 
 # FIXME: ignored
 DEFAULT_MAX_REDIRECTS = 4
@@ -94,37 +95,46 @@ class NetworkAccessManager(object):
     """
     This class mimicks httplib2 by using QgsNetworkAccessManager for all
     network calls.
+
     The return value is a tuple of (response, content), the first being and
     instance of the Response class, the second being a string that contains
     the response entity body.
+    
+    The blocking mode can be nicely used in a QgsTask to make it non blocking
+    and have some nice progress indication as well.
+
     Parameters
     ----------
     debug : bool
         verbose logging if True
     exception_class : Exception
         Custom exception class
+
     Usage 1 (blocking mode)
     -----
     ::
         nam = NetworkAccessManager(authcgf)
         try:
             (response, content) = nam.request('http://www.example.com')
-        except RequestsException, e:
+        except RequestsException as e:
             # Handle exception
             pass
+
     Usage 2 (Non blocking mode)
     -------------------------
     ::
         NOTE! if blocking mode returns immediatly
               it's up to the caller to manage listeners in case
               of non blocking mode
+
         nam = NetworkAccessManager(authcgf)
         try:
             nam.request('http://www.example.com', blocking=False)
             nam.reply.finished.connect(a_signal_listener)
-        except RequestsException, e:
+        except RequestsException as e:
             # Handle exception
             pass
+
         Get response using method:
         nam.httpResult() that return a dictionary with keys:
             'status' - http code result come from reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
@@ -137,7 +147,7 @@ class NetworkAccessManager(object):
             'exception' - the exception returne dduring execution
     """
 
-    def __init__(self, authid=None, disable_ssl_certificate_validation=False, exception_class=None, debug=False):
+    def __init__(self, authid=None, disable_ssl_certificate_validation=False, exception_class=None, debug=True):
         self.disable_ssl_certificate_validation = disable_ssl_certificate_validation
         self.authid = authid
         self.reply = None
@@ -163,12 +173,20 @@ class NetworkAccessManager(object):
     def httpResult(self):
         return self.http_call_result
 
-    def request(self, url, method="GET", body=None, headers=None, redirections=DEFAULT_MAX_REDIRECTS, connection_type=None, blocking=True):
+    def auth_manager(self):
+        return QgsApplication.authManager()
+
+    def request(self, url, method="GET", body=None, headers=None, redirections=DEFAULT_MAX_REDIRECTS, connection_type=None, blocking=True, task=None):
         """
         Make a network request by calling QgsNetworkAccessManager.
         redirections argument is ignored and is here only for httplib2 compatibility.
+        
+        task is added to the kwargs so that a QgsTask can be passed to inform the user on progress on the task.
+        Of course, this is not httplib2 compatible.
         """
         self.msg_log(u'http_call request: {0}'.format(url))
+        
+        self.task = task
 
         self.blocking_mode = blocking
         req = QNetworkRequest()
@@ -188,10 +206,10 @@ class NetworkAccessManager(object):
                 pass
             for k, v in list(headers.items()):
                 self.msg_log("Setting header %s to %s" % (k, v))
-                req.setRawHeader(k, v)
-        # if self.authid:
-        #     self.msg_log("Update request w/ authid: {0}".format(self.authid))
-        #     QgsAuthManager.instance().updateNetworkRequest(req, self.authid)
+                req.setRawHeader(k.encode(), v.encode())
+        if self.authid:
+            self.msg_log("Update request w/ authid: {0}".format(self.authid))
+            self.auth_manager().updateNetworkRequest(req, self.authid)
         if self.reply is not None and self.reply.isRunning():
             self.reply.close()
         if method.lower() == 'delete':
@@ -206,14 +224,16 @@ class NetworkAccessManager(object):
         for k, v in list(headers.items()):
             self.msg_log("%s: %s" % (k, v))
         if method.lower() in ['post', 'put']:
-            if isinstance(body, file):
+            if isinstance(body, io.IOBase):
                 body = body.read()
+            if isinstance(body, str):
+                body = body.encode()
             self.reply = func(req, body)
         else:
             self.reply = func(req)
-        # if self.authid:
-        #     self.msg_log("Update reply w/ authid: {0}".format(self.authid))
-        #     QgsAuthManager.instance().updateNetworkReply(self.reply, self.authid)
+        if self.authid:
+            self.msg_log("Update reply w/ authid: {0}".format(self.authid))
+            self.auth_manager().updateNetworkReply(self.reply, self.authid)
 
         # necessary to trap local timout manage by QgsNetworkAccessManager
         # calling QgsNetworkAccessManager::abortRequest
@@ -250,20 +270,26 @@ class NetworkAccessManager(object):
 
         return (self.http_call_result, self.http_call_result.content)
 
-    @pyqtSlot()
     def downloadProgress(self, bytesReceived, bytesTotal):
         """Keep track of the download progress"""
-        #self.msg_log("downloadProgress %s of %s ..." % (bytesReceived, bytesTotal))
-        pass
+        self.msg_log("downloadProgress %s of %s ..." % (bytesReceived, bytesTotal))
+        if self.task:
+            if bytesTotal > 0 and bytesReceived / bytesTotal * 100 <= 100:
+                # we can set a proper progress percentage as there is a decent bytesTotal
+                self.task.setProgress(bytesReceived / bytesTotal * 100)
+            else: 
+                # we cannot set a proper percentage.
+                # In the best MS tradition solve this bij starting over when indicating almost done.
+                if self.task.progress() > 95:
+                    self.task.setProgress(10)
+                self.task.setProgress(self.task.progress() + 1)
 
-    @pyqtSlot()
     def requestTimedOut(self, reply):
         """Trap the timeout. In Async mode requestTimedOut is called after replyFinished"""
-        # adapt http_call_result basing on receiving qgs timer timout signal 
+        # adapt http_call_result basing on receiving qgs timer timout signal
         self.exception_class = RequestsExceptionTimeout
         self.http_call_result.exception = RequestsExceptionTimeout("Timeout error")
 
-    @pyqtSlot()
     def replyFinished(self):
         err = self.reply.error()
         httpStatus = self.reply.attribute(QNetworkRequest.HttpStatusCodeAttribute)
@@ -338,17 +364,16 @@ class NetworkAccessManager(object):
 
                 ba = self.reply.readAll()
                 self.http_call_result.content = bytes(ba)
+                try:
+                    self.http_call_result.text = str(ba.data(), encoding='utf-8')
+                except:
+                    self.http_call_result.text = ''
                 self.http_call_result.ok = True
 
-        # Let's log the whole response for debugging purposes:
-        self.msg_log("Got response %s %s from %s" % \
-                    (self.http_call_result.status_code,
-                     self.http_call_result.status_message,
-                     self.reply.url().toString()))
         for k, v in list(self.http_call_result.headers.items()):
             self.msg_log("%s: %s" % (k, v))
         if len(self.http_call_result.content) < 1024:
-            self.msg_log("Payload :\n%s" % self.http_call_result.content)
+            self.msg_log("Payload :\n%s" % self.http_call_result.text)
         else:
             self.msg_log("Payload is > 1 KB ...")
 
@@ -366,7 +391,6 @@ class NetworkAccessManager(object):
         else:
             self.msg_log("Reply was already deleted ...")
 
-    @pyqtSlot()
     def sslErrors(self, ssl_errors):
         """
         Handle SSL errors, logging them if debug is on and ignoring them
@@ -378,7 +402,6 @@ class NetworkAccessManager(object):
         if self.disable_ssl_certificate_validation:
             self.reply.ignoreSslErrors()
 
-    @pyqtSlot()
     def abort(self):
         """
         Handle request to cancel HTTP call
