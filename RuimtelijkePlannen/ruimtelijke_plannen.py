@@ -30,7 +30,8 @@ from builtins import object
 
 from qgis.gui import QgsMapTool
 from qgis.core import   QgsProject, QgsVectorLayer, QgsLayerTreeLayer, \
-                        QgsGeometry, QgsMessageLog
+                        QgsGeometry, QgsMessageLog, \
+                        QgsActionManager, QgsAction
 from qgis.PyQt import QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, \
                              QSortFilterProxyModel
@@ -87,6 +88,67 @@ class GetPointTool(QgsMapTool):
     def activate(self):
         self.canvas.setCursor(self.cursor)
 
+class rp_plan(object):
+    '''
+    A class for accessing layers and styles belonging to a plantype.
+    '''
+    
+    def __init__(self, plantype):
+        '''
+        Constructor
+        '''
+        
+        self.plantype = plantype
+    
+    @property    
+    def layers(self):
+        '''
+        The layers and styles for the plantype.
+        
+        '''
+        if self.plantype == 'bestemmingsplan':
+            return [ \
+                {'name': 'app:Figuur'},
+                {'name': 'app:Lettertekenaanduiding'},
+                {'name': 'app:Functieaanduiding', 'qml': 'functieaanduiding_digitaal.qml'},
+                {'name': 'app:Maatvoering', 'qml': 'maatvoering_digitaal.qml'},
+                {'name': 'app:Bouwaanduiding', 'qml': 'bouwaanduiding_imro_qgis.qml'},
+                {'name': 'app:Bouwvlak', 'qml': 'bouwvlak_digitaal.qml'},
+                {'name': 'app:Gebiedsaanduiding'},
+                {'name': 'app:Dubbelbestemming', 'qml': 'dubbelbestemming_digitaal.qml'},
+                {'name': 'app:Enkelbestemming', 'qml': 'enkelbestemming_imro_qgis.qml'},
+                {'name': 'app:Bestemmingsplangebied', 'qml': 'bestemmingsplangebied_imro_qgis.qml'} ]
+        elif self.plantype == 'gemeentelijk plan; bestemmingsplan artikel 10':
+            return [ {'name': 'app:Plangebied_PCP', 'qml': 'plangebied.qml'} ]
+        else:
+            # ten minste:
+            # voorbereidingsbesluit, beheersverordening, omgevingsvergunning,
+            # gerechtelijke uitspraak, reactieve aanwijzing
+            return [ {'name': 'app:Besluitsubvlak_X', 'qml': 'besluitvlak.qml'},
+                     {'name': 'app:Besluitvlak_X', 'qml': 'besluitvlak.qml'},
+                     {'name': 'app:Besluitgebied_X', 'qml': 'plangebied.qml'} ]
+
+layer_action = '''
+from qgis.core import QgsMessageLog
+from qgis.PyQt.QtGui import QDesktopServices
+from qgis.PyQt.QtCore import QUrl
+
+urls = ""
+if "[%verwijzingNaarTekst%]":
+    urls = "[%verwijzingNaarTekst%]"
+elif "[%verwijzingNaarObjectgerichteTekst%]":
+    urls = "[%verwijzingNaarObjectgerichteTekst%]"
+
+if not ',' in urls:
+    urls = [urls]
+else:
+    urls = urls.split(',')
+
+for url in urls:
+    QDesktopServices().openUrl(QUrl(url))
+'''
+
+
 
 class RuimtelijkePlannen(object):
     """QGIS Plugin Implementation."""
@@ -126,7 +188,6 @@ class RuimtelijkePlannen(object):
         
         self.nam = networkaccessmanager.NetworkAccessManager()
         self.project = QgsProject.instance()
-
 
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
@@ -237,14 +298,14 @@ class RuimtelijkePlannen(object):
         self.action.setCheckable(True)
         # add it to the same group as the pan/zoom tools
         self.iface.actionPan().actionGroup().addAction(self.action)
-        self.xytool = GetPointTool(self.mapcanvas, self.getBestemmingsplannenByPoint)
+        self.xytool = GetPointTool(self.mapcanvas, self.getRPplannenByPoint)
             
         self.toolbarSearch = QLineEdit()
         self.toolbarSearch.setMaximumWidth(200)
         self.toolbarSearch.setAlignment(QtCore.Qt.AlignLeft)
-        self.toolbarSearch.setPlaceholderText("Bestemmingsplan code")
+        self.toolbarSearch.setPlaceholderText("NL.IMRO.")
         self.toolbar.addWidget(self.toolbarSearch)
-        self.toolbarSearch.returnPressed.connect(self.addBestemmingsplanFromToolbar)
+        self.toolbarSearch.returnPressed.connect(self.addRPplanFromToolbar)
 
         self.proxyModel = QSortFilterProxyModel()
         self.sourceModel = QStandardItemModel()
@@ -252,7 +313,21 @@ class RuimtelijkePlannen(object):
     
         self.dlg.treeView_results.setModel(self.proxyModel)
         self.dlg.treeView_results.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.dlg.treeView_results.doubleClicked.connect(self.loadBestemmingsplan)
+        self.dlg.treeView_results.doubleClicked.connect(self.loadRPplan)
+        
+        # urls to RuimtelijkePlannen
+        self.rp_search_url = "https://www.ruimtelijkeplannen.nl/viewer/web-roo/rest/search"
+        self.rp_wfs_url = "https://afnemers.ruimtelijkeplannen.nl/afnemers2012/services"
+        
+        # supported tabs on RuimtelijkePlannen
+        self.rp_supported_tabs = ["JURIDISCH"]
+        
+        # layer action on RuimtelijkePlannen layers to show links to text
+        self.rp_layer_action = QgsAction(QgsAction.GenericPython, 
+                                    'Toon verwijzing(en) naar tekst', 
+                                    layer_action, "", False, "", 
+                                    {'Feature', 'Canvas'})
+
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -265,6 +340,30 @@ class RuimtelijkePlannen(object):
             
     def activate_tool(self):
         self.mapcanvas.setMapTool(self.xytool)
+
+    def addRPplanFromToolbar(self):
+        '''slot for toolbarSearch'''
+        self.addFromIdn(self.toolbarSearch.text())
+
+    def addFromIdn(self, search_string):
+        '''adds plan from idn'''
+        self.toolbarSearch.clear()
+        url = self.rp_search_url + "/plan/id/" + search_string
+        QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)       # wait cursor
+        (response, content) = self.nam.request(url)
+        self.rp = json.loads(content.decode("utf-8"))
+        QApplication.restoreOverrideCursor()                    # restore cursor
+        if "ErrorType" in self.rp:
+            self.iface.messageBar().pushMessage("Error",
+                self.tr(u'Plan not found.') + self.rp["ErrorDescription"], 
+                level = Qgis.Critical)
+        elif not self.rp["tabFilter"] in self.rp_supported_tabs:
+            self.iface.messageBar().pushMessage("Error",
+                self.tr(u'Plan type not supported.'), 
+                level = Qgis.Critical)
+        else:
+            self.addRPplan_WFS(plangebied = search_string, 
+                               plantype = self.rp["typePlan"])
 
     def getWfsLayer(self, service, typename, wfs_filter):
         params = {
@@ -282,57 +381,54 @@ class RuimtelijkePlannen(object):
         vlayer = QgsVectorLayer(uri, layername, "WFS")
         return vlayer
 
-    def addBestemmingsplanFromToolbar(self):
-        self.addFromIdn(self.toolbarSearch.text())
-
-    def addFromIdn(self, search_string):
-        self.toolbarSearch.clear()
-        self.addBestemmingsplan(search_string)
-
-    def addBestemmingsplan(self, plangebied):
-        service = 'http://afnemers.ruimtelijkeplannen.nl/afnemers2012/services'
+    def addRPplan_WFS(self, plangebied, plantype = 'bestemmingsplan'):
+        '''adds a plan as a WFS layer'''
+        service = self.rp_wfs_url
         wfs_filter = '"plangebied"=\'' + plangebied + '\''
         
-        layers = [ \
-        {u'name': u'app:Functieaanduiding', u'qml': 'functieaanduiding_digitaal.qml'}, \
-        {u'name': u'app:Maatvoering', u'qml': 'maatvoering_digitaal.qml'}, \
-        {u'name': u'app:Bouwaanduiding', u'qml': 'bouwaanduiding_imro_qgis.qml'}, \
-        {u'name': u'app:Bouwvlak', u'qml': 'bouwvlak_digitaal.qml'}, \
-        {u'name': u'app:Dubbelbestemming', u'qml': 'dubbelbestemming_digitaal.qml'}, \
-        {u'name': u'app:Enkelbestemming', u'qml': 'enkelbestemming_imro_qgis.qml'}, \
-        {u'name': u'app:Bestemmingsplangebied', u'qml': 'bestemmingsplangebied_imro_qgis.qml'}, \
-        ]
-
+        plan = rp_plan(plantype)
         # add a layergroup to insert the layers in
         bpGroup = QgsProject.instance().layerTreeRoot().insertGroup(0, plangebied)
-        for layer in layers:
-            vlayer = self.getWfsLayer(service, layer[u'name'], wfs_filter)
+        for layer in plan.layers:
+            vlayer = self.getWfsLayer(service, layer['name'], wfs_filter)
             if vlayer.isValid():
-                layerQml = os.path.join(self.plugin_dir, 'styles', layer[u'qml'])
-                vlayer.loadNamedStyle(layerQml)
+                if 'qml' in layer:
+                    layerQml = os.path.join(self.plugin_dir, 
+                                            'styles',  
+                                            layer['qml'])
+                    if os.path.exists(layerQml):
+                        vlayer.loadNamedStyle(layerQml)
+                vlayer.actions().addAction(self.rp_layer_action)
                 self.project.addMapLayer(vlayer, False)
                 bpGroup.insertChildNode(-1, QgsLayerTreeLayer(vlayer))
             else:
-                QgsMessageLog.logMessage(u'Invalid Layer', u'RuimtelijkePlannen')
+                self.iface.messageBar().pushMessage('Warning', 
+                    self.tr(u"Invalid layer: ") + layer['name'],
+                    level=Qgis.WARNING)
                 
         vlayer.selectAll()
         canvas = self.iface.mapCanvas()
         canvas.zoomToSelected(vlayer)
         vlayer.removeSelection()
 
-    def addSourceRow(self, serviceLayer):
-        if serviceLayer["tabFilter"] == 'JURIDISCH':
-            planId = QStandardItem(serviceLayer["identificatie"])
-            planNaam = QStandardItem(serviceLayer["naam"])
-            planType = QStandardItem(serviceLayer["typePlan"])
-            self.sourceModel.appendRow( [ planId, planType, planNaam ] )
-
-    def loadBestemmingsplan(self, index):
+    def loadRPplan(self, index):
+        '''slot for row in search results widget'''
         self.dlg.hide()
-        self.addBestemmingsplan(index.sibling(index.row(),0).data())
-        
-    def getBestemmingsplannenByPoint(self, event):
-        '''Queries ruimtelijkeplannen by point.'''
+        self.addRPplan_WFS( plangebied = index.sibling(index.row(),0).data(), 
+                            plantype = index.sibling(index.row(),1).data())
+
+    def addSourceRow(self, plan):
+        '''adds plan to search results widget'''
+        if plan["tabFilter"] in self.rp_supported_tabs:
+            planId = QStandardItem(plan["identificatie"])
+            planNaam = QStandardItem(plan["naam"])
+            planType = QStandardItem(plan["typePlan"])
+            #planGebiedType = QStandardItem(plan["planGebiedType"])      # not yet(?) in use by this plugin
+            #self.sourceModel.appendRow( [ planId, planType, planNaam, planGebiedType] )
+            self.sourceModel.appendRow( [ planId, planType, planNaam] )
+            
+    def getRPplannenByPoint(self, event):
+        '''Queries ruimtelijkeplannen by point and shows results on widget.'''
         
         x, y = self.mapcanvas.getCoordinateTransform().toMapCoordinates(
                     event.pos().x(), event.pos().y())
@@ -340,9 +436,7 @@ class RuimtelijkePlannen(object):
         # actual_crs_id = self.mapcanvas.mapRenderer().destinationCrs().authid()
         
         self.sourceModel.clear()
-        url = "http://www.ruimtelijkeplannen.nl/web-roo/rest/search/plannen/xy/" \
-                + str(x) + "/" + str(y)
-        # hmm, this URL shows only a small subset of all plans in RP. Why?
+        url = self.rp_search_url + "/plannen/xy/" + str(x) + "/" + str(y)
 
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)       # wait cursor
         (response, content) = self.nam.request(url)
