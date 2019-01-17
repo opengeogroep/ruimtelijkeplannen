@@ -30,8 +30,9 @@ from builtins import object
 
 from qgis.gui import QgsMapTool
 from qgis.core import   QgsProject, QgsVectorLayer, QgsLayerTreeLayer, \
-                        QgsGeometry, QgsMessageLog, \
-                        QgsActionManager, QgsAction
+                        QgsGeometry, QgsPoint, QgsPointXY, QgsMessageLog, \
+                        QgsActionManager, QgsAction, \
+                        QgsCoordinateReferenceSystem, QgsCoordinateTransform
 from qgis.PyQt import QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, \
                              QSortFilterProxyModel
@@ -50,6 +51,21 @@ import os.path
 import urllib
 
 from .network import networkaccessmanager
+
+layer_action = '''
+from qgis.core import QgsMessageLog
+from qgis.PyQt.QtGui import QDesktopServices
+from qgis.PyQt.QtCore import QUrl
+
+urls = ""
+if "[%verwijzingNaarTekst%]":
+    urls = "[%verwijzingNaarTekst%]"
+elif "[%verwijzingNaarObjectgerichteTekst%]":
+    urls = "[%verwijzingNaarObjectgerichteTekst%]"
+
+for url in urls.split(','):
+    QDesktopServices().openUrl(QUrl(url))
+'''
 
 class GetPointTool(QgsMapTool):
 
@@ -127,27 +143,6 @@ class rp_plan(object):
             return [ {'name': 'app:Besluitsubvlak_X', 'qml': 'besluitvlak.qml'},
                      {'name': 'app:Besluitvlak_X', 'qml': 'besluitvlak.qml'},
                      {'name': 'app:Besluitgebied_X', 'qml': 'plangebied.qml'} ]
-
-layer_action = '''
-from qgis.core import QgsMessageLog
-from qgis.PyQt.QtGui import QDesktopServices
-from qgis.PyQt.QtCore import QUrl
-
-urls = ""
-if "[%verwijzingNaarTekst%]":
-    urls = "[%verwijzingNaarTekst%]"
-elif "[%verwijzingNaarObjectgerichteTekst%]":
-    urls = "[%verwijzingNaarObjectgerichteTekst%]"
-
-if not ',' in urls:
-    urls = [urls]
-else:
-    urls = urls.split(',')
-
-for url in urls:
-    QDesktopServices().openUrl(QUrl(url))
-'''
-
 
 
 class RuimtelijkePlannen(object):
@@ -290,10 +285,10 @@ class RuimtelijkePlannen(object):
         self.action = self.add_action(
             dialog = None,
             icon_path = ':/plugins/RuimtelijkePlannen/icon.png',
-            text=self.tr(u'Click map to open query RuimtelijkePlannen'),
+            text=self.tr(u'Click map query RuimtelijkePlannen'),
             callback=self.activate_tool,
-            add_to_menu=False,
-            status_tip=self.tr(u'Click map to open query RuimtelijkePlannen'),
+            add_to_menu=True,
+            status_tip=self.tr(u'Click map query RuimtelijkePlannen'),
             parent=self.iface.mainWindow())
         self.action.setCheckable(True)
         # add it to the same group as the pan/zoom tools
@@ -315,6 +310,9 @@ class RuimtelijkePlannen(object):
         self.dlg.treeView_results.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.dlg.treeView_results.doubleClicked.connect(self.loadRPplan)
         
+        # have the right crs at hand
+        self.rp_crs = QgsCoordinateReferenceSystem(28992)
+        
         # urls to RuimtelijkePlannen
         self.rp_search_url = "https://www.ruimtelijkeplannen.nl/viewer/web-roo/rest/search"
         self.rp_wfs_url = "https://afnemers.ruimtelijkeplannen.nl/afnemers2012/services"
@@ -324,10 +322,9 @@ class RuimtelijkePlannen(object):
         
         # layer action on RuimtelijkePlannen layers to show links to text
         self.rp_layer_action = QgsAction(QgsAction.GenericPython, 
-                                    'Toon verwijzing(en) naar tekst', 
+                                    'Open text link(s) in browser ', 
                                     layer_action, "", False, "", 
                                     {'Feature', 'Canvas'})
-
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -430,25 +427,35 @@ class RuimtelijkePlannen(object):
     def getRPplannenByPoint(self, event):
         '''Queries ruimtelijkeplannen by point and shows results on widget.'''
         
-        x, y = self.mapcanvas.getCoordinateTransform().toMapCoordinates(
-                    event.pos().x(), event.pos().y())
-        # todo: what if not 28992?
-        # actual_crs_id = self.mapcanvas.mapRenderer().destinationCrs().authid()
         
+        actual_crs = self.mapcanvas.mapSettings().destinationCrs()
+        xform = QgsCoordinateTransform(actual_crs, self.rp_crs, QgsProject.instance())
+        xy = xform.transform(QgsPointXY(
+                    self.mapcanvas.getCoordinateTransform().toMapCoordinates(
+                        event.pos().x(), 
+                        event.pos().y())))
+
         self.sourceModel.clear()
-        url = self.rp_search_url + "/plannen/xy/" + str(x) + "/" + str(y)
+        url = self.rp_search_url + "/plannen/xy/" + str(xy.x()) + "/" + str(xy.y())
+        QgsMessageLog.logMessage(u'Query: ' + str(url), 'RuimtelijkePlannen')
 
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)       # wait cursor
         (response, content) = self.nam.request(url)
         self.rp = json.loads(content.decode("utf-8"))
 
+        if "ErrorType" in self.rp:
+            self.iface.messageBar().pushMessage("Error",
+                self.tr(u'No Plans found.') + self.rp["ErrorDescription"], 
+                level = Qgis.Critical)
+            return
+
         for plan in self.rp["plannen"]:
             self.addSourceRow(plan)
 
-        self.sourceModel.setHeaderData(0, QtCore.Qt.Horizontal, "Identificatie")
+        self.sourceModel.setHeaderData(0, QtCore.Qt.Horizontal, "Identification")
         self.sourceModel.horizontalHeaderItem(0).setTextAlignment(QtCore.Qt.AlignLeft)
         self.sourceModel.setHeaderData(1, QtCore.Qt.Horizontal, "Type")
-        self.sourceModel.setHeaderData(2, QtCore.Qt.Horizontal, "Naam")
+        self.sourceModel.setHeaderData(2, QtCore.Qt.Horizontal, "Name")
         self.dlg.treeView_results.resizeColumnsToContents()
         self.dlg.treeView_results.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         self.dlg.treeView_results.setSelectionMode(1)
