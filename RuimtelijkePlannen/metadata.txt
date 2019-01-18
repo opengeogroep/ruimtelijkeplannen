@@ -13,10 +13,10 @@ qgisMinimumVersion=3.0
 qgisMaximumVersion=3.99
 description=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl
 version=3.2
-author=Jos Rijborz - Provincie Zeeland, Raymond Nijssen - OpenGeoGroep, Marco Duiker - OpenGeoGroep
+author=Jos Rijborz - Provincie Zeeland (for QGIS2), Raymond Nijssen - OpenGeoGroep (for QGSI2), Marco Duiker - OpenGeoGroep
 email=info@opengeogroep.nl
 
-about=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl
+about=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl. All plans on the tab "JURIDISCH" are supported. On all added layers actions are defined to open the linked texts in a web browser.
 
 tracker=https://github.com/opengeogroep/ruimtelijkeplannen/issues
 repository=https://github.com/opengeogroep/ruimtelijkeplannen

@@ -124,13 +124,13 @@ class rp_plan(object):
         '''
         if self.plantype == 'bestemmingsplan':
             return [ \
-                {'name': 'app:Figuur'},
-                {'name': 'app:Lettertekenaanduiding'},
+                {'name': 'app:Figuur', 'qml': 'figuur.qml'},
+                {'name': 'app:Lettertekenaanduiding', 'qml': 'lettertekenaanduiding.qml'},
                 {'name': 'app:Functieaanduiding', 'qml': 'functieaanduiding_digitaal.qml'},
                 {'name': 'app:Maatvoering', 'qml': 'maatvoering_digitaal.qml'},
                 {'name': 'app:Bouwaanduiding', 'qml': 'bouwaanduiding_imro_qgis.qml'},
                 {'name': 'app:Bouwvlak', 'qml': 'bouwvlak_digitaal.qml'},
-                {'name': 'app:Gebiedsaanduiding'},
+                {'name': 'app:Gebiedsaanduiding', 'qml': 'gebiedsaanduiding_imro_qgis.qml'},
                 {'name': 'app:Dubbelbestemming', 'qml': 'dubbelbestemming_digitaal.qml'},
                 {'name': 'app:Enkelbestemming', 'qml': 'enkelbestemming_imro_qgis.qml'},
                 {'name': 'app:Bestemmingsplangebied', 'qml': 'bestemmingsplangebied_imro_qgis.qml'} ]
@@ -427,9 +427,10 @@ class RuimtelijkePlannen(object):
     def getRPplannenByPoint(self, event):
         '''Queries ruimtelijkeplannen by point and shows results on widget.'''
         
-        
-        actual_crs = self.mapcanvas.mapSettings().destinationCrs()
-        xform = QgsCoordinateTransform(actual_crs, self.rp_crs, QgsProject.instance())
+        xform = QgsCoordinateTransform(
+                self.mapcanvas.mapSettings().destinationCrs(),
+                self.rp_crs, 
+                QgsProject.instance())
         xy = xform.transform(QgsPointXY(
                     self.mapcanvas.getCoordinateTransform().toMapCoordinates(
                         event.pos().x(), 
