@@ -12,7 +12,7 @@ name=Ruimtelijke Plannen
 qgisMinimumVersion=3.0
 qgisMaximumVersion=3.99
 description=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl
-version=3.2
+version=3.2.1
 author=Jos Rijborz - Provincie Zeeland (for QGIS2), Raymond Nijssen - OpenGeoGroep (for QGSI2), Marco Duiker - OpenGeoGroep
 email=info@opengeogroep.nl
 
