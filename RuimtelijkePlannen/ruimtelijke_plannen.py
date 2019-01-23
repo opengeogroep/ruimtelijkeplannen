@@ -31,7 +31,7 @@ from builtins import object
 from qgis.gui import QgsMapTool
 from qgis.core import   QgsProject, QgsVectorLayer, QgsLayerTreeLayer, \
                         QgsGeometry, QgsPoint, QgsPointXY, QgsMessageLog, \
-                        QgsActionManager, QgsAction, \
+                        QgsActionManager, QgsAction, Qgis, \
                         QgsCoordinateReferenceSystem, QgsCoordinateTransform
 from qgis.PyQt import QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, \
