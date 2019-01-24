@@ -6,6 +6,8 @@ QGIS plugin for Dutch spatial or zoning plans.
 
 Na installatie verschijnt de plugin in een werkbalk en in het web-menu van QGIS.
 
+De kaartlagen worden toegevoegd vanuit de Web Feature Service (WFS) van het koppelvlak van [ruimtelijkeplannen.nl](https://ruimtelijkeplannen.nl). Dit betekent dat u de beschikking heeft over alle data die u verder zelf kunt opmaken of gebruiken voor analyses.
+
 ### Plan toevoegen middels klikken in de kaart ###
 Door eerst het `RP` icoontje aan te klikken en daarna in de kaart te klikken verschijnt een lijst met plannen. Dit zijn alle plannen die zijn opgenomen op het tabblad "JURIDISCH" van [ruimtelijkeplannen.nl](https://ruimtelijkeplannen.nl).
 
@@ -17,9 +19,7 @@ Indien het IMRO-idn van een plan bekend is kan dit ook direct worden ingevuld in
 
 Indien het plan inderdaad bestaat en opgenomen is op het tabblad "JURIDISCH' wordt het vervolgens toegevoegd aan het project.
 
-### Verder gebruik ###
-
-De kaartlagen worden toegevoegd vanuit de Web Feature Service (WFS) van het koppelvlak van [ruimtelijkeplannen.nl](https://ruimtelijkeplannen.nl). Dit betekent dat u de beschikking heeft over alle data die u verder zelf kunt opmaken of gebruiken voor analyses.
+### Doorklikken naar teksten ###
 
 Aan elke laag is door de plugin ook een zogenaamde 'actie' gekoppeld. Door eerst bij het QGIS action-knopje (rechts naast het identify-knopje) de actie 'Open text link(s) in browser' te kiezen en daarna een object in een toegevoegd plan aan te klikken worden alle gekoppelde documenten in de velden 'verwijzingNaarText' of 'verwijzingNaarObjectgerichteText' geopend in uw webbrowser. 
 **Let op:** dit kunnen er soms veel zijn!
