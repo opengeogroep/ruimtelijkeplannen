@@ -317,7 +317,7 @@ class RuimtelijkePlannen(object):
         self.rp_crs = QgsCoordinateReferenceSystem(28992)
         
         # urls to RuimtelijkePlannen
-        self.rp_search_url = "https://www.ruimtelijkeplannen.nl/viewer/web-roo/rest/search"
+        self.rp_search_url = "https://www.ruimtelijkeplannen.nl/web-roo/rest/search"
         self.rp_wfs_url = "https://afnemers.ruimtelijkeplannen.nl/afnemers2012/services"
         
         # supported tabs on RuimtelijkePlannen
