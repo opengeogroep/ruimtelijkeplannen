@@ -122,7 +122,11 @@ class rp_plan(object):
         The layers and styles for the plantype.
         
         '''
-        if self.plantype == 'bestemmingsplan':
+        if self.plantype in [\
+            'bestemmingsplan',
+            'inpassingsplan',
+            'uitwerkingsplan',
+            'wijzigingsplan']:
             return [ \
                 {'name': 'app:Figuur', 'qml': 'figuur.qml'},
                 {'name': 'app:Lettertekenaanduiding', 'qml': 'lettertekenaanduiding.qml'},
@@ -134,7 +138,13 @@ class rp_plan(object):
                 {'name': 'app:Dubbelbestemming', 'qml': 'dubbelbestemming_digitaal.qml'},
                 {'name': 'app:Enkelbestemming', 'qml': 'enkelbestemming_imro_qgis.qml'},
                 {'name': 'app:Bestemmingsplangebied', 'qml': 'bestemmingsplangebied_imro_qgis.qml'} ]
-        elif self.plantype == 'gemeentelijk plan; bestemmingsplan artikel 10':
+        elif self.plantype in [\
+            'gemeentelijk plan; bestemmingsplan artikel 10',
+            'gemeentelijk plan; uitwerkingsplan artikel 11',
+            'gemeentelijk plan; voorbereidingsbesluit',
+            'gemeentelijk plan; wijzigingsplan artikel 11',
+            'gemeentelijke visie; overig']:
+            # plans to standard PRPCP; plangebied only
             return [ {'name': 'app:Plangebied_PCP', 'qml': 'plangebied.qml'} ]
         else:
             # ten minste:
@@ -311,6 +321,7 @@ class RuimtelijkePlannen(object):
     
         self.dlg.treeView_results.setModel(self.proxyModel)
         self.dlg.treeView_results.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.dlg.treeView_results.setSortingEnabled(True)
         self.dlg.treeView_results.doubleClicked.connect(self.loadRPplan)
         
         # have the right crs at hand
@@ -320,9 +331,35 @@ class RuimtelijkePlannen(object):
         self.rp_search_url = "https://www.ruimtelijkeplannen.nl/web-roo/rest/search"
         self.rp_wfs_url = "https://afnemers.ruimtelijkeplannen.nl/afnemers2012/services"
         
-        # supported tabs on RuimtelijkePlannen
-        self.rp_supported_tabs = ["JURIDISCH"]
-        
+        # the following lists of plantypes comes from: https://www.ruimtelijkeplannen.nl/viewer/planoverzicht
+        self.rp_supported_planTypes = [\
+            'aanwijzingsbesluit',
+            'beheersverordening',
+            'bestemmingsplan',
+            'exploitatieplan',
+            'gemeentelijk plan; bestemmingsplan artikel 10', 
+            'gemeentelijk plan; uitwerkingsplan artikel 11',
+            'gemeentelijk plan; voorbereidingsbesluit',
+            'gemeentelijk plan; wijzigingsplan artikel 11',
+            'gemeentelijke visie; overig',
+            'gerechtelijke uitspraak', 
+            'inpassingsplan',
+            'omgevingsvergunning',
+            'projectbesluit',
+            'reactieve aanwijzing',
+            'tijdelijke ontheffing buitenplans',
+            'uitwerkingsplan',
+            'voorbereidingsbesluit',
+            'wijzigingsplan'
+            ]
+        self.rp_not_supported_plantypes = [\
+            # these are the plan types which can have multiple maps
+            'amvb',
+            'provinciale verordening',
+            'regeling',
+            'structuurvisie'
+            ]
+
         # layer action on RuimtelijkePlannen layers to show links to text
         self.rp_layer_action = QgsAction(QgsAction.GenericPython, 
                                     'Open text link(s) in browser ', 
@@ -357,7 +394,7 @@ class RuimtelijkePlannen(object):
             self.iface.messageBar().pushMessage("Error",
                 self.tr(u'Plan not found.') + self.rp["ErrorDescription"], 
                 level = Qgis.Critical)
-        elif not self.rp["tabFilter"] in self.rp_supported_tabs:
+        elif not self.rp["typePlan"] in self.rp_supported_planTypes:
             self.iface.messageBar().pushMessage("Error",
                 self.tr(u'Plan type not supported.'), 
                 level = Qgis.Critical)
@@ -419,13 +456,14 @@ class RuimtelijkePlannen(object):
 
     def addSourceRow(self, plan):
         '''adds plan to search results widget'''
-        if plan["tabFilter"] in self.rp_supported_tabs:
+        if plan["typePlan"] in self.rp_supported_planTypes:
             planId = QStandardItem(plan["identificatie"])
+            planStatus = QStandardItem(plan["planStatus"])
             planNaam = QStandardItem(plan["naam"])
             planType = QStandardItem(plan["typePlan"])
             #planGebiedType = QStandardItem(plan["planGebiedType"])      # not yet(?) in use by this plugin
-            #self.sourceModel.appendRow( [ planId, planType, planNaam, planGebiedType] )
-            self.sourceModel.appendRow( [ planId, planType, planNaam] )
+            self.sourceModel.appendRow( [ planId, planStatus, planType, planNaam] )
+            #self.sourceModel.appendRow( [ planId, planType, planNaam] )
             
     def getRPplannenByPoint(self, event):
         '''Queries ruimtelijkeplannen by point and shows results on widget.'''
@@ -458,11 +496,13 @@ class RuimtelijkePlannen(object):
 
         self.sourceModel.setHeaderData(0, QtCore.Qt.Horizontal, "Identification")
         self.sourceModel.horizontalHeaderItem(0).setTextAlignment(QtCore.Qt.AlignLeft)
-        self.sourceModel.setHeaderData(1, QtCore.Qt.Horizontal, "Type")
-        self.sourceModel.setHeaderData(2, QtCore.Qt.Horizontal, "Name")
+        self.sourceModel.setHeaderData(1, QtCore.Qt.Horizontal, "Status")
+        self.sourceModel.setHeaderData(2, QtCore.Qt.Horizontal, "Type")
+        self.sourceModel.setHeaderData(3, QtCore.Qt.Horizontal, "Name")
         self.dlg.treeView_results.resizeColumnsToContents()
         self.dlg.treeView_results.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         self.dlg.treeView_results.setSelectionMode(1)
         self.dlg.treeView_results.selectRow(0)
+        self.dlg.treeView_results.sortByColumn(2, QtCore.Qt.AscendingOrder)
         QApplication.restoreOverrideCursor()                    # restore cursor
         self.dlg.show()

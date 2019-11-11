@@ -9,7 +9,11 @@ Na installatie verschijnt de plugin in een werkbalk en in het web-menu van QGIS.
 De kaartlagen worden toegevoegd vanuit de Web Feature Service (WFS) van het koppelvlak van [ruimtelijkeplannen.nl](https://ruimtelijkeplannen.nl). Dit betekent dat u de beschikking heeft over alle data die u verder zelf kunt opmaken of gebruiken voor analyses.
 
 ### Plan toevoegen middels klikken in de kaart ###
-Door eerst het `RP` icoontje aan te klikken en daarna in de kaart te klikken verschijnt een lijst met plannen. Dit zijn alle plannen die zijn opgenomen op het tabblad "JURIDISCH" van [ruimtelijkeplannen.nl](https://ruimtelijkeplannen.nl).
+Door eerst het `RP` icoontje aan te klikken en daarna in de kaart te klikken verschijnt een lijst met plannen. Dit zijn alle plannen die NIET behoren tot een van de volgende typen:
+  - amvb
+  - provinciale verordening
+  - regeling
+  - structuurvisie
 
 Middels dubbelklikken op een van de regels in de lijst wordt het plan toegevoegd aan het QGIS project.
 
@@ -28,8 +32,6 @@ Aan elke laag is door de plugin ook een zogenaamde 'actie' gekoppeld. Door eerst
 
 Doorontwikkelingen zijn welkom. Enkele suggesties:
 
-De plugin werkt nu alleen voor plannen op het tabblad "JURIDISCH". Uitbreiding naar meer planvormen is zeer welkom. 
-
-Vormvrije plannen als structuurvisies of verordeningen zijn niet eenvoudig te verbeelden vanuit de data. Hiervoor zou het zinnig kunnen zijn om de services uit het koppelvlak van ruimtelijkeplannen die de plannen correct verbeelden in deze plugin te betrekken.
+De niet ondersteunde plantypes 'amvb', 'provinciale verordening', 'regeling', 'structuurvisie' zijn niet eenvoudig te verbeelden vanuit de data. Hiervoor zou het zinnig kunnen zijn om de services uit het koppelvlak van ruimtelijkeplannen die de plannen correct verbeelden in deze plugin te betrekken.
 
 Voor alle doorintwikkeling geldt dat pull requests zeer welkom zijn. Daarnaast is OpenGeoGroep bereid vragen te beantwoorden en mee te denken.
