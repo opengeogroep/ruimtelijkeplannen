@@ -418,14 +418,18 @@ class RuimtelijkePlannen(object):
         vlayer = QgsVectorLayer(uri, layername, "WFS")
         return vlayer
 
-    def addRPplan_WFS(self, plangebied, plantype = 'bestemmingsplan'):
+    def addRPplan_WFS(self, plangebied, plantype):
         '''adds a plan as a WFS layer'''
-        service = self.rp_wfs_url
-        wfs_filter = '"plangebied"=\'' + plangebied + '\''
         
-        plan = rp_plan(plantype)
+        QgsMessageLog.logMessage(u'Adding plan with IDN "%s" and plantype "%s"'\
+            % (plangebied,plantype), 'RuimtelijkePlannen')
+        
         # add a layergroup to insert the layers in
         bpGroup = QgsProject.instance().layerTreeRoot().insertGroup(0, plangebied)
+        
+        service = self.rp_wfs_url
+        wfs_filter = '"plangebied"=\'' + plangebied + '\''
+        plan = rp_plan(plantype)
         for layer in plan.layers:
             vlayer = self.getWfsLayer(service, layer['name'], wfs_filter)
             if vlayer.isValid():
@@ -435,6 +439,12 @@ class RuimtelijkePlannen(object):
                                             layer['qml'])
                     if os.path.exists(layerQml):
                         vlayer.loadNamedStyle(layerQml)
+                    else:
+                        self.iface.messageBar().pushMessage('Warning', 
+                            self.tr(u"Style not found. See message log for details."),
+                            level=Qgis.WARNING)
+                        QgsMessageLog.logMessage(u'Style file not found:' + \
+                            str(layerQml), 'RuimtelijkePlannen')
                 vlayer.actions().addAction(self.rp_layer_action)
                 self.project.addMapLayer(vlayer, False)
                 bpGroup.insertChildNode(-1, QgsLayerTreeLayer(vlayer))
@@ -452,7 +462,7 @@ class RuimtelijkePlannen(object):
         '''slot for row in search results widget'''
         self.dlg.hide()
         self.addRPplan_WFS( plangebied = index.sibling(index.row(),0).data(), 
-                            plantype = index.sibling(index.row(),1).data())
+                            plantype = index.sibling(index.row(),2).data())
 
     def addSourceRow(self, plan):
         '''adds plan to search results widget'''
@@ -463,7 +473,7 @@ class RuimtelijkePlannen(object):
             planType = QStandardItem(plan["typePlan"])
             #planGebiedType = QStandardItem(plan["planGebiedType"])      # not yet(?) in use by this plugin
             self.sourceModel.appendRow( [ planId, planStatus, planType, planNaam] )
-            #self.sourceModel.appendRow( [ planId, planType, planNaam] )
+
             
     def getRPplannenByPoint(self, event):
         '''Queries ruimtelijkeplannen by point and shows results on widget.'''
@@ -489,6 +499,7 @@ class RuimtelijkePlannen(object):
             self.iface.messageBar().pushMessage("Error",
                 self.tr(u'No Plans found.') + self.rp["ErrorDescription"], 
                 level = Qgis.Critical)
+            QApplication.restoreOverrideCursor()                # restore cursor
             return
 
         for plan in self.rp["plannen"]:
