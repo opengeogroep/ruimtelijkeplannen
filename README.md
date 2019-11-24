@@ -28,10 +28,21 @@ Indien het plan inderdaad bestaat en wordt ondersteund, dan wordt het vervolgens
 Aan elke laag is door de plugin ook een zogenaamde 'actie' gekoppeld. Door eerst bij het QGIS action-knopje (rechts naast het identify-knopje) de actie 'Open text link(s) in browser' te kiezen en daarna een object in een toegevoegd plan aan te klikken worden alle gekoppelde documenten in de velden 'verwijzingNaarText' of 'verwijzingNaarObjectgerichteText' geopend in uw webbrowser. 
 **Let op:** dit kunnen er soms veel zijn!
 
-## Doorontwikkeling ##
+## OpenSource en Doorontwikkeling ##
 
-Doorontwikkelingen zijn welkom. Enkele suggesties:
+Dit project is een OpenSource project, waarbij verschillende partijen hebben bijgedragen aan de ontwikkeling:
+
+  - [Provincie Zeeland](https://www.zeeland.nl) zorgde voor de eerste versie in QGIS2 en QGIS3.
+  - [LBP|SIGHT](https://www.lbpsight.nl/) financierde de uitbreiding van de plantypen en het gebruik van meerdere stijlen.
+  - [LandGoed](https://landgoed.it/) sponsort de help functionaleit en het fixen van bugs .
+  - [OpenGeoGroep](https://opengeogroep.nl/) zorgt voor het beheer van de plugin in de QGIS plugins repository.
+
+
+
+Verdere doorontwikkelingen zijn welkom. Enkele suggesties:
+
+Nu de mogelijkheid bestaat om uit meerdere stijlen te kiezen (een voor print en een voor scherm) zou het mooi zijn om ook andere stijlen toe te voegen. In de help staat uitgelegd  hoe.
 
 De niet ondersteunde plantypes 'amvb', 'provinciale verordening', 'regeling', 'structuurvisie' zijn niet eenvoudig te verbeelden vanuit de data. Hiervoor zou het zinnig kunnen zijn om de services uit het koppelvlak van ruimtelijkeplannen die de plannen correct verbeelden in deze plugin te betrekken.
 
-Voor alle doorintwikkeling geldt dat pull requests zeer welkom zijn. Daarnaast is OpenGeoGroep bereid vragen te beantwoorden en mee te denken.
+Voor alle doorintwikkeling geldt dat pull requests zeer welkom zijn. Daarnaast zijn [LandGoed](https://landgoed.it/) en [OpenGeoGroep](https://opengeogroep.nl/) bereid vragen te beantwoorden en mee te denken.
