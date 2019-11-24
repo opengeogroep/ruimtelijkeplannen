@@ -7,7 +7,7 @@
                               -------------------
         begin                : 2017-06-25
         git sha              : $Format:%H$
-        copyright            : (C) 2017 by OpenGeoGroep
+        copyright            : (C) 2019 by OpenGeoGroep
         email                : info@opengeogroep.nl
  ***************************************************************************/
 
@@ -35,16 +35,20 @@ from qgis.core import   QgsProject, QgsVectorLayer, QgsLayerTreeLayer, \
                         QgsCoordinateReferenceSystem, QgsCoordinateTransform
 from qgis.PyQt import QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, \
-                             QSortFilterProxyModel
+                             QSortFilterProxyModel, QUrl
 
 from qgis.PyQt.QtWidgets import QAction, QLineEdit, QAbstractItemView, \
                                 QCompleter, QMessageBox, QHeaderView, QApplication
-from qgis.PyQt.QtGui import QIcon, QStandardItemModel, QStandardItem, QPixmap, QCursor
+from qgis.PyQt.QtGui import QIcon, QStandardItemModel, QStandardItem, QPixmap, \
+                            QCursor, QDesktopServices
 
 # Initialize Qt resources from file resources.py
 from . import resources
+
 # Import the code for the dialog
 from .ruimtelijke_plannen_dialog import RuimtelijkePlannenDialog
+from .ruimtelijke_plannen_settings_dialog import RuimtelijkePlannenSettingsDialog
+
 
 import json
 import os.path
@@ -122,11 +126,17 @@ class rp_plan(object):
         The layers and styles for the plantype.
         
         '''
-        if self.plantype in [\
-            'bestemmingsplan',
-            'inpassingsplan',
-            'uitwerkingsplan',
-            'wijzigingsplan']:
+        svbp_plannen = ['bestemmingsplan',
+                        'inpassingsplan',
+                        'uitwerkingsplan',
+                        'wijzigingsplan']
+        prpcp_plannen = ['gemeentelijk plan; bestemmingsplan artikel 10',
+                         'gemeentelijk plan; uitwerkingsplan artikel 11',
+                         'gemeentelijk plan; voorbereidingsbesluit',
+                         'gemeentelijk plan; wijzigingsplan artikel 11',
+                         'gemeentelijke visie; overig']
+        
+        if self.plantype in svbp_plannen:
             return [ \
                 {'name': 'app:Figuur', 'qml': 'figuur.qml'},
                 {'name': 'app:Lettertekenaanduiding', 'qml': 'lettertekenaanduiding.qml'},
@@ -138,16 +148,10 @@ class rp_plan(object):
                 {'name': 'app:Dubbelbestemming', 'qml': 'dubbelbestemming_digitaal.qml'},
                 {'name': 'app:Enkelbestemming', 'qml': 'enkelbestemming_imro_qgis.qml'},
                 {'name': 'app:Bestemmingsplangebied', 'qml': 'bestemmingsplangebied_imro_qgis.qml'} ]
-        elif self.plantype in [\
-            'gemeentelijk plan; bestemmingsplan artikel 10',
-            'gemeentelijk plan; uitwerkingsplan artikel 11',
-            'gemeentelijk plan; voorbereidingsbesluit',
-            'gemeentelijk plan; wijzigingsplan artikel 11',
-            'gemeentelijke visie; overig']:
-            # plans to standard PRPCP; plangebied only
+        elif self.plantype in prpcp_plannen:
             return [ {'name': 'app:Plangebied_PCP', 'qml': 'plangebied.qml'} ]
         else:
-            # ten minste:
+            # We should make this explicit. At least:
             # voorbereidingsbesluit, beheersverordening, omgevingsvergunning,
             # gerechtelijke uitspraak, reactieve aanwijzing
             return [ {'name': 'app:Besluitsubvlak_X', 'qml': 'besluitvlak.qml'},
@@ -196,6 +200,18 @@ class RuimtelijkePlannen(object):
         
         self.nam = networkaccessmanager.NetworkAccessManager()
         self.project = QgsProject.instance()
+        
+        # initialize styles folder
+        self.settings = QSettings()
+        self.available_styles_folder = os.path.join(self.plugin_dir,'styles')
+        self.map_style = self.settings.value("RuimtelijkePlannen/map_style",
+            "print")
+        self.map_style_folder = os.path.join(self.available_styles_folder,
+            self.map_style)
+        if not os.path.isdir(self.map_style_folder):
+            self.map_style = "print"
+            self.map_style_folder = os.path.join(self.available_styles_folder,
+                self.map_style)
 
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
@@ -293,6 +309,23 @@ class RuimtelijkePlannen(object):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
         self.dlg = RuimtelijkePlannenDialog()
+        self.settings_dlg = RuimtelijkePlannenSettingsDialog()
+                
+        self.add_action(
+            dialog = None,
+            icon_path = ':/plugins/RuimtelijkePlannen/help.png',
+            text=self.tr(u'Help'),
+            callback=self.open_help,
+            parent=self.iface.mainWindow(),
+            add_to_toolbar=False)
+            
+        self.add_action(
+            dialog = None,
+            icon_path = ':/plugins/RuimtelijkePlannen/settings.png',
+            text=self.tr(u'Settings'),
+            callback=self.run_settings,
+            parent=self.iface.mainWindow(),
+            add_to_toolbar=False)
 
         # add a button to click in map and find bestemmingsplannen
         self.action = self.add_action(
@@ -331,7 +364,8 @@ class RuimtelijkePlannen(object):
         self.rp_search_url = "https://www.ruimtelijkeplannen.nl/web-roo/rest/search"
         self.rp_wfs_url = "https://afnemers.ruimtelijkeplannen.nl/afnemers2012/services"
         
-        # the following lists of plantypes comes from: https://www.ruimtelijkeplannen.nl/viewer/planoverzicht
+        # the following lists of plantypes comes from: 
+        # https://www.ruimtelijkeplannen.nl/viewer/planoverzicht
         self.rp_supported_planTypes = [\
             'aanwijzingsbesluit',
             'beheersverordening',
@@ -374,6 +408,48 @@ class RuimtelijkePlannen(object):
                 action)
             self.iface.removeToolBarIcon(action)
         del self.toolbar
+        
+        
+    def open_help(self):
+        '''
+        Method to open the help pages
+        '''
+        
+        QDesktopServices().openUrl(QUrl.fromLocalFile(os.path.join("file://",
+            self.plugin_dir, 'help/build/html','index.html')))
+        
+    def run_settings(self):
+        '''
+        method showing the settings dialog and act on the results
+        '''
+
+        # we do this on opening this setting, so the user can easily add 
+        # new styles wthout reloading the plugin.
+        available_styles = next(os.walk(self.available_styles_folder))[1]
+        self.settings_dlg.styleComboBox.clear()
+        self.settings_dlg.styleComboBox.addItems(available_styles)
+        
+        index = self.settings_dlg.styleComboBox.findText(self.map_style)
+        self.settings_dlg.styleComboBox.setCurrentIndex(index)
+
+        self.settings_dlg.show()        
+        result = self.settings_dlg.exec_()
+        if result:
+            map_style_folder = os.path.join(self.available_styles_folder,
+                self.settings_dlg.styleComboBox.currentText())
+            if os.path.isdir(map_style_folder):
+                self.map_style = self.settings_dlg.styleComboBox.currentText()
+                self.map_style_folder = os.path.join(self.available_styles_folder,
+                    self.map_style)
+                self.settings.setValue("RuimtelijkePlannen/map_style", 
+                    self.map_style)
+            else:
+                self.iface.messageBar().pushMessage('Warning', 
+                    self.tr(u"Selected style folder not found. See message log for details."),
+                    level=Qgis.WARNING)
+                QgsMessageLog.logMessage(u'Style folder not found: ' + \
+                    os.path.join(self.available_styles_folder, self.map_style), 
+                    'RuimtelijkePlannen')
             
     def activate_tool(self):
         self.mapcanvas.setMapTool(self.xytool)
@@ -386,10 +462,10 @@ class RuimtelijkePlannen(object):
         '''adds plan from idn'''
         self.toolbarSearch.clear()
         url = self.rp_search_url + "/plan/id/" + search_string
-        QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)       # wait cursor
+        QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
         (response, content) = self.nam.request(url)
         self.rp = json.loads(content.decode("utf-8"))
-        QApplication.restoreOverrideCursor()                    # restore cursor
+        QApplication.restoreOverrideCursor()
         if "ErrorType" in self.rp:
             self.iface.messageBar().pushMessage("Error",
                 self.tr(u'Plan not found.') + self.rp["ErrorDescription"], 
@@ -434,16 +510,14 @@ class RuimtelijkePlannen(object):
             vlayer = self.getWfsLayer(service, layer['name'], wfs_filter)
             if vlayer.isValid():
                 if 'qml' in layer:
-                    layerQml = os.path.join(self.plugin_dir, 
-                                            'styles',  
-                                            layer['qml'])
+                    layerQml = os.path.join(self.map_style_folder, layer['qml'])
                     if os.path.exists(layerQml):
                         vlayer.loadNamedStyle(layerQml)
                     else:
                         self.iface.messageBar().pushMessage('Warning', 
                             self.tr(u"Style not found. See message log for details."),
                             level=Qgis.WARNING)
-                        QgsMessageLog.logMessage(u'Style file not found:' + \
+                        QgsMessageLog.logMessage(u'Style file not found: ' + \
                             str(layerQml), 'RuimtelijkePlannen')
                 vlayer.actions().addAction(self.rp_layer_action)
                 self.project.addMapLayer(vlayer, False)
@@ -471,7 +545,8 @@ class RuimtelijkePlannen(object):
             planStatus = QStandardItem(plan["planStatus"])
             planNaam = QStandardItem(plan["naam"])
             planType = QStandardItem(plan["typePlan"])
-            #planGebiedType = QStandardItem(plan["planGebiedType"])      # not yet(?) in use by this plugin
+            #planGebiedType = QStandardItem(plan["planGebiedType"])
+            # not yet(?) in use by this plugin
             self.sourceModel.appendRow( [ planId, planStatus, planType, planNaam] )
 
             
@@ -491,7 +566,7 @@ class RuimtelijkePlannen(object):
         url = self.rp_search_url + "/plannen/xy/" + str(xy.x()) + "/" + str(xy.y())
         QgsMessageLog.logMessage(u'Query: ' + str(url), 'RuimtelijkePlannen')
 
-        QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)       # wait cursor
+        QApplication.setOverrideCursor(QtCore.Qt.WaitCursor) 
         (response, content) = self.nam.request(url)
         self.rp = json.loads(content.decode("utf-8"))
 
@@ -499,7 +574,7 @@ class RuimtelijkePlannen(object):
             self.iface.messageBar().pushMessage("Error",
                 self.tr(u'No Plans found.') + self.rp["ErrorDescription"], 
                 level = Qgis.Critical)
-            QApplication.restoreOverrideCursor()                # restore cursor
+            QApplication.restoreOverrideCursor()
             return
 
         for plan in self.rp["plannen"]:
@@ -515,5 +590,5 @@ class RuimtelijkePlannen(object):
         self.dlg.treeView_results.setSelectionMode(1)
         self.dlg.treeView_results.selectRow(0)
         self.dlg.treeView_results.sortByColumn(2, QtCore.Qt.AscendingOrder)
-        QApplication.restoreOverrideCursor()                    # restore cursor
+        QApplication.restoreOverrideCursor()
         self.dlg.show()

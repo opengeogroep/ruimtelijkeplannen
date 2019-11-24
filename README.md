@@ -21,7 +21,7 @@ Middels dubbelklikken op een van de regels in de lijst wordt het plan toegevoegd
 
 Indien het IMRO-idn van een plan bekend is kan dit ook direct worden ingevuld in de werkbalk van de plugin (rechts naast het `RP` icoontje).
 
-Indien het plan inderdaad bestaat en opgenomen is op het tabblad "JURIDISCH' wordt het vervolgens toegevoegd aan het project.
+Indien het plan inderdaad bestaat en wordt ondersteund, dan wordt het vervolgens toegevoegd aan het project.
 
 ### Doorklikken naar teksten ###
 

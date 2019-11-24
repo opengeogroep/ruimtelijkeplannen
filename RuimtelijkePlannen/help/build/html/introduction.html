@@ -1,0 +1,177 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Introduction &#8212; RuimtelijkePlannen 3.4.0 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '3.4.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to RuimtelijkePlannen’s documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to RuimtelijkePlannen’s documentation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">RuimtelijkePlannen 3.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="about">
+<h2>About<a class="headerlink" href="#about" title="Permalink to this headline">¶</a></h2>
+<p>This plug-in is was first developed by Jos Rijborz - Provincie Zeeland (for QGIS2) and Raymond Nijssen - OpenGeoGroep (for QGSI2). The current version was completely rebuild for QGIS3 by Marco Duiker - OpenGeoGroep.</p>
+<p>First development and first version for QGIS3 was sponsored by <a class="reference external" href="https://www.zeeland.nl">Provincie Zeeland</a>. Support for more plantypes and multiple styles was funded by <a class="reference external" href="https://lbpsight.nl">LBP|SIGHT</a>. This help and general maintenance is sponsored by <a class="reference external" href="https://landgoed.it">LandGoed</a>.</p>
+<p>You will find the plugin in the web menu of QGIS. Furthermore you’ll find a RP icon next to a text field on a toolbar.</p>
+<p>The plug-in provides a simple way to add a spatial zoning plan (RuimtelijkPlan) to your QGIS project.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>First zoom the map to your area of interest. Then click the RP icon in the RuimtelijkePlannen toolbar, followed by a click in the map. A list of (the supported) spatial zoning plans in that location is shown. Double click one of the plans to add it to the map.</p>
+<p>Alternatively you can add a plan with a known IMRO-IDN by typing the IMRO-IDN in the textbox next to the RP icon.</p>
+<p>The plan is added from the RuimtelijkePlannen WFS services, so all data is available to you.</p>
+<div class="section" id="open-associated-texts">
+<h3>Open associated texts<a class="headerlink" href="#open-associated-texts" title="Permalink to this headline">¶</a></h3>
+<p>Some object in the map have associated texts. These can be opened by using the action button (this button should be next to the identify button). First choose the action “Open text link(s) in browser” and then click an object in the map which has associated texts. These texts will be opened in a web browser.</p>
+<p><strong>Warning</strong>: This can sometimes open many documents.</p>
+</div>
+</div>
+<div class="section" id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
+<p>The following plan types as used by the RuimtelijkePlannen services are supported by this plugin:</p>
+<blockquote>
+<div><ul class="simple">
+<li>‘aanwijzingsbesluit’,</li>
+<li>‘beheersverordening’,</li>
+<li>‘bestemmingsplan’,</li>
+<li>‘exploitatieplan’,</li>
+<li>‘gemeentelijk plan; bestemmingsplan artikel 10’,</li>
+<li>‘gemeentelijk plan; uitwerkingsplan artikel 11’,</li>
+<li>‘gemeentelijk plan; voorbereidingsbesluit’,</li>
+<li>‘gemeentelijk plan; wijzigingsplan artikel 11’,</li>
+<li>‘gemeentelijke visie; overig’,</li>
+<li>‘gerechtelijke uitspraak’,</li>
+<li>‘inpassingsplan’,</li>
+<li>‘omgevingsvergunning’,</li>
+<li>‘projectbesluit’,</li>
+<li>‘reactieve aanwijzing’,</li>
+<li>‘tijdelijke ontheffing buitenplans’,</li>
+<li>‘uitwerkingsplan’,</li>
+<li>‘voorbereidingsbesluit’,</li>
+<li>‘wijzigingsplan’</li>
+</ul>
+</div></blockquote>
+<p>The following plan types as used by the RuimtelijkePlannen services are NOT supported by this plugin:</p>
+<blockquote>
+<div><ul class="simple">
+<li>‘amvb’,</li>
+<li>‘provinciale verordening’,</li>
+<li>‘regeling’,</li>
+<li>‘structuurvisie’</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="settings">
+<h2>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h2>
+<p>The settings dialog allows you to select a default style which is applied to the spatial zoning plan when adding it to the project.</p>
+<div class="section" id="adding-styles">
+<h3>Adding styles<a class="headerlink" href="#adding-styles" title="Permalink to this headline">¶</a></h3>
+<p>In the plugin folder you will find a folder named <cite>styles</cite>. Each sub folder in  the folder styles contains a style which can be chosen in the settings dialog.</p>
+<p>To create your own style, copy one of these folders and adapt the style files to your wishes.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#about">About</a></li>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#open-associated-texts">Open associated texts</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#limitations">Limitations</a></li>
+<li><a class="reference internal" href="#settings">Settings</a><ul>
+<li><a class="reference internal" href="#adding-styles">Adding styles</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to RuimtelijkePlannen’s documentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/introduction.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to RuimtelijkePlannen’s documentation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">RuimtelijkePlannen 3.4.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2013, OpenGeoGroep.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.5.
+    </div>
+  </body>
+</html>

@@ -2,4 +2,10 @@
     <qresource prefix="/plugins/RuimtelijkePlannen" >
         <file>icon.png</file>
     </qresource>
+    <qresource prefix="/plugins/RuimtelijkePlannen" >
+        <file>settings.png</file>
+    </qresource>
+    <qresource prefix="/plugins/RuimtelijkePlannen" >
+        <file>help.png</file>
+    </qresource>
 </RCC>
