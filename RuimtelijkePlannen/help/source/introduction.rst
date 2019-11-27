@@ -25,7 +25,7 @@ The plan is added from the RuimtelijkePlannen WFS services, so all data is avail
 Open associated texts
 '''''''''''''''''''''
 
-Some object in the map have associated texts. These can be opened by using the action button (this button should be next to the identify button). First choose the action "Open text link(s) in browser" and then click an object in the map which has associated texts. These texts will be opened in a web browser.
+Objects in some layers have associated texts. If so, these can be opened by using the action button (this button should be next to the identify button). First choose the action "Open text link(s) in browser" and then click an object in the map which has associated texts. These texts will be opened in a web browser.
 
 **Warning**: This can sometimes open many documents.
 
@@ -71,6 +71,11 @@ The settings dialog allows you to select a default style which is applied to the
 Adding styles
 '''''''''''''
 
-In the plugin folder you will find a folder named `styles`. Each sub folder in  the folder styles contains a style which can be chosen in the settings dialog. 
+First you need to locate the plugin folder. You can do this via the QGIS menu `Settings` ->  `User Profiles` -> `Open Active Profile Folder`. A file manager will open your profile folder. Browse to `python/plugins/RuimtelijkePlannen`. 
 
-To create your own style, copy one of these folders and adapt the style files to your wishes.
+In the plugin folder you will find a folder named `styles`. Each sub folder in  the folder `styles` contains a style which can be chosen in the settings dialog. 
+
+To create your own style, copy one of these folders and adapt the style files to your wishes. This can be done by saving a style from the `Symbology` tab on the layer properties menu. At the bottom of this tab you'll find a `Style` button which, when clicked, gives the option to save the style. 
+Please make sure not to save the attribute actions when saving the style!
+
+Please make sure to keep a backup of your style(s) folder somewhere as these get deleted when you install a new version of the plugin.

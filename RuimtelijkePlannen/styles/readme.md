@@ -5,6 +5,7 @@ Each folder in this directory contains a style which can be selected in the sett
 
 Create a style by copying one of the folders and adapt the style files in the new folder. 
 The style will become available for selecting in the settings dialog immedeately. No plugin reload required.
+**Beware**: Don't save the actions along with the style!
 
 If a style file is missing in one of the styles folder, QGIS will issue a warning and use a random style.
 

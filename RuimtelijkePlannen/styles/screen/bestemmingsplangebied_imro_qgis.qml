@@ -417,13 +417,7 @@
     <constraint exp="" field="dossierStatus" desc=""/>
   </constraintExpressions>
   <expressionfields/>
-  <attributeactions>
-    <defaultAction key="Canvas" value="{00000000-0000-0000-0000-000000000000}"/>
-    <actionsetting notificationMessage="" shortTitle="" capture="0" isEnabledOnlyWhenEditable="0" icon="" name="Open text link(s) in browser " id="{683117dc-b645-4a8e-b05a-154bb973d898}" type="1" action="&#xa;from qgis.core import QgsMessageLog&#xa;from qgis.PyQt.QtGui import QDesktopServices&#xa;from qgis.PyQt.QtCore import QUrl&#xa;&#xa;urls = &quot;&quot;&#xa;if &quot;[%verwijzingNaarTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarTekst%]&quot;&#xa;elif &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;&#xa;&#xa;for url in urls.split(','):&#xa;    QDesktopServices().openUrl(QUrl(url))&#xa;">
-      <actionScope id="Canvas"/>
-      <actionScope id="Feature"/>
-    </actionsetting>
-  </attributeactions>
+ 
   <attributetableconfig sortExpression="" sortOrder="0" actionWidgetStyle="dropDown">
     <columns>
       <column hidden="0" name="fid" type="field" width="-1"/>

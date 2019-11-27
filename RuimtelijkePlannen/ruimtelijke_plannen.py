@@ -57,7 +57,7 @@ import urllib
 from .network import networkaccessmanager
 
 layer_action = '''
-from qgis.core import QgsMessageLog
+from qgis.core import QgsMessageLog, Qgis
 from qgis.PyQt.QtGui import QDesktopServices
 from qgis.PyQt.QtCore import QUrl
 
@@ -67,8 +67,16 @@ if "[%verwijzingNaarTekst%]":
 elif "[%verwijzingNaarObjectgerichteTekst%]":
     urls = "[%verwijzingNaarObjectgerichteTekst%]"
 
-for url in urls.split(','):
-    QDesktopServices().openUrl(QUrl(url))
+if urls:
+    qgis.utils.iface.messageBar().pushMessage('Info', 
+                    u"Opening text documents...",
+                    level=Qgis.Info)
+    for url in urls.split(','):
+        QDesktopServices().openUrl(QUrl(url))
+else:
+    qgis.utils.iface.messageBar().pushMessage('Warning', 
+                    u"No text documents found to open.",
+                    level=Qgis.Warning)
 '''
 
 class GetPointTool(QgsMapTool):
@@ -138,25 +146,53 @@ class rp_plan(object):
         
         if self.plantype in svbp_plannen:
             return [ \
-                {'name': 'app:Figuur', 'qml': 'figuur.qml'},
-                {'name': 'app:Lettertekenaanduiding', 'qml': 'lettertekenaanduiding.qml'},
-                {'name': 'app:Functieaanduiding', 'qml': 'functieaanduiding_digitaal.qml'},
-                {'name': 'app:Maatvoering', 'qml': 'maatvoering_digitaal.qml'},
-                {'name': 'app:Bouwaanduiding', 'qml': 'bouwaanduiding_imro_qgis.qml'},
-                {'name': 'app:Bouwvlak', 'qml': 'bouwvlak_digitaal.qml'},
-                {'name': 'app:Gebiedsaanduiding', 'qml': 'gebiedsaanduiding_imro_qgis.qml'},
-                {'name': 'app:Dubbelbestemming', 'qml': 'dubbelbestemming_digitaal.qml'},
-                {'name': 'app:Enkelbestemming', 'qml': 'enkelbestemming_imro_qgis.qml'},
-                {'name': 'app:Bestemmingsplangebied', 'qml': 'bestemmingsplangebied_imro_qgis.qml'} ]
+                {'name': 'app:Bestemmingsplangebied', 
+                 'qml': 'bestemmingsplangebied_imro_qgis.qml', 
+                 'text_action': True},
+                {'name': 'app:Figuur', 
+                 'qml': 'figuur.qml', 
+                 'text_action': False},
+                {'name': 'app:Lettertekenaanduiding', 
+                 'qml': 'lettertekenaanduiding.qml', 
+                 'text_action': False},
+                {'name': 'app:Functieaanduiding', 
+                 'qml': 'functieaanduiding_digitaal.qml', 
+                 'text_action': False},
+                {'name': 'app:Maatvoering', 
+                 'qml': 'maatvoering_digitaal.qml', 
+                 'text_action': False},
+                {'name': 'app:Bouwaanduiding',
+                 'qml': 'bouwaanduiding_imro_qgis.qml', 
+                 'text_action': False},
+                {'name': 'app:Bouwvlak', 
+                 'qml': 'bouwvlak_digitaal.qml', 
+                 'text_action': False},
+                {'name': 'app:Gebiedsaanduiding', 
+                 'qml': 'gebiedsaanduiding_imro_qgis.qml', 
+                 'text_action': False},
+                {'name': 'app:Dubbelbestemming',
+                 'qml': 'dubbelbestemming_digitaal.qml', 
+                 'text_action': True},
+                {'name': 'app:Enkelbestemming',
+                 'qml': 'enkelbestemming_imro_qgis.qml', 
+                 'text_action': True}]
         elif self.plantype in prpcp_plannen:
-            return [ {'name': 'app:Plangebied_PCP', 'qml': 'plangebied.qml'} ]
+            return [ {'name': 'app:Plangebied_PCP', 
+                      'qml': 'plangebied.qml', 
+                      'text_action': True} ]
         else:
             # We should make this explicit. At least:
             # voorbereidingsbesluit, beheersverordening, omgevingsvergunning,
             # gerechtelijke uitspraak, reactieve aanwijzing
-            return [ {'name': 'app:Besluitsubvlak_X', 'qml': 'besluitvlak.qml'},
-                     {'name': 'app:Besluitvlak_X', 'qml': 'besluitvlak.qml'},
-                     {'name': 'app:Besluitgebied_X', 'qml': 'plangebied.qml'} ]
+            return [ {'name': 'app:Besluitgebied_X', 
+                      'qml': 'plangebied.qml', 
+                      'text_action': True},
+                     {'name': 'app:Besluitsubvlak_X', 
+                      'qml': 'besluitvlak.qml', 
+                      'text_action': True},
+                     {'name': 'app:Besluitvlak_X', 
+                      'qml': 'besluitvlak.qml', 
+                      'text_action': True}]
 
 
 class RuimtelijkePlannen(object):
@@ -446,7 +482,7 @@ class RuimtelijkePlannen(object):
             else:
                 self.iface.messageBar().pushMessage('Warning', 
                     self.tr(u"Selected style folder not found. See message log for details."),
-                    level=Qgis.WARNING)
+                    level=Qgis.Warning)
                 QgsMessageLog.logMessage(u'Style folder not found: ' + \
                     os.path.join(self.available_styles_folder, self.map_style), 
                     'RuimtelijkePlannen')
@@ -516,16 +552,17 @@ class RuimtelijkePlannen(object):
                     else:
                         self.iface.messageBar().pushMessage('Warning', 
                             self.tr(u"Style not found. See message log for details."),
-                            level=Qgis.WARNING)
+                            level=Qgis.Warning)
                         QgsMessageLog.logMessage(u'Style file not found: ' + \
                             str(layerQml), 'RuimtelijkePlannen')
-                vlayer.actions().addAction(self.rp_layer_action)
+                if layer['text_action']:
+                    vlayer.actions().addAction(self.rp_layer_action)
                 self.project.addMapLayer(vlayer, False)
                 bpGroup.insertChildNode(-1, QgsLayerTreeLayer(vlayer))
             else:
                 self.iface.messageBar().pushMessage('Warning', 
                     self.tr(u"Invalid layer: ") + layer['name'],
-                    level=Qgis.WARNING)
+                    level=Qgis.Warning)
                 
         vlayer.selectAll()
         canvas = self.iface.mapCanvas()

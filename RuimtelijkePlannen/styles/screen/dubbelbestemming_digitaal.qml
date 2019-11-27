@@ -1,19 +1,19 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis hasScaleBasedVisibilityFlag="0" maxScale="0" minScale="0" styleCategories="AllStyleCategories" simplifyDrawingHints="1" readOnly="0" simplifyMaxScale="1" simplifyAlgorithm="0" version="3.10.0-A Coruña" simplifyDrawingTol="1" simplifyLocal="1" labelsEnabled="0">
+<qgis simplifyDrawingTol="1" simplifyMaxScale="1" version="3.10.0-A Coruña" minScale="0" simplifyDrawingHints="1" maxScale="0" styleCategories="LayerConfiguration|Symbology|Symbology3D|Labeling|Fields|Forms|MapTips|Diagrams|AttributeTable|Rendering|CustomProperties|GeometryOptions" simplifyAlgorithm="0" labelsEnabled="0" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" readOnly="0">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>1</Searchable>
   </flags>
-  <renderer-v2 type="RuleRenderer" symbollevels="0" forceraster="0" enableorderby="0">
+  <renderer-v2 type="RuleRenderer" forceraster="0" symbollevels="0" enableorderby="0">
     <rules key="{0a0cc38a-4c8a-4a3f-82f6-ac9b5fccd2d8}">
-      <rule symbol="0" filter=" &quot;bestemmingshoofdgroep&quot;  = 'leiding'" label="Leiding" key="{0189e8b2-0ea1-4fcd-95a6-aeeedd6e79b5}"/>
-      <rule symbol="1" filter=" &quot;bestemmingshoofdgroep&quot;  = 'waarde'" label="Waarde" key="{ed9e1559-4868-4dd9-8d90-94e1c5e721d3}"/>
-      <rule symbol="2" filter=" &quot;bestemmingshoofdgroep&quot;  = 'waterstaat'" label="Waterstaat" key="{80f6d2c9-39a3-4061-8638-aaf2a0655e93}"/>
+      <rule filter=" &quot;bestemmingshoofdgroep&quot;  = 'leiding'" key="{0189e8b2-0ea1-4fcd-95a6-aeeedd6e79b5}" label="Leiding" symbol="0"/>
+      <rule filter=" &quot;bestemmingshoofdgroep&quot;  = 'waarde'" key="{ed9e1559-4868-4dd9-8d90-94e1c5e721d3}" label="Waarde" symbol="1"/>
+      <rule filter=" &quot;bestemmingshoofdgroep&quot;  = 'waterstaat'" key="{80f6d2c9-39a3-4061-8638-aaf2a0655e93}" label="Waterstaat" symbol="2"/>
     </rules>
     <symbols>
-      <symbol type="fill" alpha="1" clip_to_extent="1" name="0" force_rhr="0">
-        <layer locked="0" pass="0" class="PointPatternFill" enabled="1">
+      <symbol clip_to_extent="1" type="fill" alpha="1" name="0" force_rhr="0">
+        <layer locked="0" class="PointPatternFill" enabled="1" pass="0">
           <prop k="displacement_x" v="0"/>
           <prop k="displacement_x_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="displacement_x_unit" v="MM"/>
@@ -41,8 +41,8 @@
               <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
-          <symbol type="marker" alpha="1" clip_to_extent="1" name="@0@0" force_rhr="0">
-            <layer locked="0" pass="0" class="FontMarker" enabled="1">
+          <symbol clip_to_extent="1" type="marker" alpha="1" name="@0@0" force_rhr="0">
+            <layer locked="0" class="FontMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="chr" v=""/>
               <prop k="color" v="0,0,0,255"/>
@@ -70,7 +70,7 @@
             </layer>
           </symbol>
         </layer>
-        <layer locked="0" pass="0" class="SimpleLine" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -96,18 +96,18 @@
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol type="fill" alpha="1" clip_to_extent="1" name="1" force_rhr="0">
-        <layer locked="0" pass="0" class="PointPatternFill" enabled="1">
+      <symbol clip_to_extent="1" type="fill" alpha="1" name="1" force_rhr="0">
+        <layer locked="0" class="PointPatternFill" enabled="1" pass="0">
           <prop k="displacement_x" v="0"/>
           <prop k="displacement_x_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="displacement_x_unit" v="MM"/>
           <prop k="displacement_y" v="0"/>
           <prop k="displacement_y_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="displacement_y_unit" v="MM"/>
-          <prop k="distance_x" v="3"/>
+          <prop k="distance_x" v="4"/>
           <prop k="distance_x_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="distance_x_unit" v="MM"/>
-          <prop k="distance_y" v="3"/>
+          <prop k="distance_y" v="4"/>
           <prop k="distance_y_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="distance_y_unit" v="MM"/>
           <prop k="offset_x" v="0"/>
@@ -125,8 +125,8 @@
               <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
-          <symbol type="marker" alpha="1" clip_to_extent="1" name="@1@0" force_rhr="0">
-            <layer locked="0" pass="0" class="FontMarker" enabled="1">
+          <symbol clip_to_extent="1" type="marker" alpha="1" name="@1@0" force_rhr="0">
+            <layer locked="0" class="FontMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="chr" v="+"/>
               <prop k="color" v="0,0,0,255"/>
@@ -140,7 +140,7 @@
               <prop k="outline_width" v="0.1"/>
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
-              <prop k="size" v="1.6"/>
+              <prop k="size" v="3.5"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MM"/>
               <prop k="vertical_anchor_point" v="1"/>
@@ -154,7 +154,7 @@
             </layer>
           </symbol>
         </layer>
-        <layer locked="0" pass="0" class="SimpleLine" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -180,8 +180,8 @@
           </data_defined_properties>
         </layer>
       </symbol>
-      <symbol type="fill" alpha="1" clip_to_extent="1" name="2" force_rhr="0">
-        <layer locked="0" pass="0" class="PointPatternFill" enabled="1">
+      <symbol clip_to_extent="1" type="fill" alpha="1" name="2" force_rhr="0">
+        <layer locked="0" class="PointPatternFill" enabled="1" pass="0">
           <prop k="displacement_x" v="0"/>
           <prop k="displacement_x_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="displacement_x_unit" v="MM"/>
@@ -209,8 +209,8 @@
               <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
-          <symbol type="marker" alpha="1" clip_to_extent="1" name="@2@0" force_rhr="0">
-            <layer locked="0" pass="0" class="FontMarker" enabled="1">
+          <symbol clip_to_extent="1" type="marker" alpha="1" name="@2@0" force_rhr="0">
+            <layer locked="0" class="FontMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="chr" v="~"/>
               <prop k="color" v="0,0,0,255"/>
@@ -238,7 +238,7 @@
             </layer>
           </symbol>
         </layer>
-        <layer locked="0" pass="0" class="SimpleLine" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="5;2"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -267,19 +267,20 @@
     </symbols>
   </renderer-v2>
   <customproperties>
-    <property value="0" key="embeddedWidgets/count"/>
+    <property key="embeddedWidgets/count" value="0"/>
     <property key="variableNames"/>
     <property key="variableValues"/>
   </customproperties>
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
-  <SingleCategoryDiagramRenderer attributeLegend="1" diagramType="Histogram">
-    <DiagramCategory enabled="0" labelPlacementMethod="XHeight" diagramOrientation="Up" sizeScale="3x:0,0,0,0,0,0" lineSizeType="MM" penColor="#000000" scaleDependency="Area" rotationOffset="270" penWidth="0" barWidth="5" height="15" opacity="1" minimumSize="0" backgroundColor="#ffffff" minScaleDenominator="0" width="15" scaleBasedVisibility="0" maxScaleDenominator="0" backgroundAlpha="255" penAlpha="255" lineSizeScale="3x:0,0,0,0,0,0" sizeType="MM">
-      <fontProperties style="" description="Sans Serif,9,-1,5,50,0,0,0,0,0"/>
+  <SingleCategoryDiagramRenderer diagramType="Histogram" attributeLegend="1">
+    <DiagramCategory scaleDependency="Area" backgroundColor="#ffffff" lineSizeType="MM" height="15" sizeScale="3x:0,0,0,0,0,0" lineSizeScale="3x:0,0,0,0,0,0" opacity="1" penColor="#000000" minScaleDenominator="0" minimumSize="0" enabled="0" rotationOffset="270" penAlpha="255" width="15" diagramOrientation="Up" penWidth="0" maxScaleDenominator="0" barWidth="5" sizeType="MM" scaleBasedVisibility="0" backgroundAlpha="255" labelPlacementMethod="XHeight">
+      <fontProperties description="Sans Serif,9,-1,5,50,0,0,0,0,0" style=""/>
+      <attribute label="" color="#000000" field=""/>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings linePlacementFlags="18" priority="0" obstacle="0" zIndex="0" showAll="1" placement="1" dist="0">
+  <DiagramLayerSettings placement="1" zIndex="0" obstacle="0" dist="0" linePlacementFlags="18" showAll="1" priority="0">
     <properties>
       <Option type="Map">
         <Option type="QString" name="name" value=""/>
@@ -420,111 +421,104 @@
     </field>
   </fieldConfiguration>
   <aliases>
-    <alias field="fid" name="" index="0"/>
-    <alias field="bestemmingshoofdgroep" name="" index="1"/>
-    <alias field="historisch" name="" index="2"/>
-    <alias field="hoofdfuncties" name="" index="3"/>
-    <alias field="identificatie" name="" index="4"/>
-    <alias field="naam" name="" index="5"/>
-    <alias field="ondergeschikteFuncties" name="" index="6"/>
-    <alias field="plangebied" name="" index="7"/>
-    <alias field="planstatus" name="" index="8"/>
-    <alias field="typePlan" name="" index="9"/>
-    <alias field="versieIMRO" name="" index="10"/>
-    <alias field="verwijzingNaarObjectgerichteTekst" name="" index="11"/>
-    <alias field="verwijzingNaarTekst" name="" index="12"/>
-    <alias field="dossierID" name="" index="13"/>
-    <alias field="dossierStatus" name="" index="14"/>
-    <alias field="datum" name="" index="15"/>
-    <alias field="verwijzingNaarExternPlan" name="" index="16"/>
+    <alias index="0" name="" field="fid"/>
+    <alias index="1" name="" field="bestemmingshoofdgroep"/>
+    <alias index="2" name="" field="historisch"/>
+    <alias index="3" name="" field="hoofdfuncties"/>
+    <alias index="4" name="" field="identificatie"/>
+    <alias index="5" name="" field="naam"/>
+    <alias index="6" name="" field="ondergeschikteFuncties"/>
+    <alias index="7" name="" field="plangebied"/>
+    <alias index="8" name="" field="planstatus"/>
+    <alias index="9" name="" field="typePlan"/>
+    <alias index="10" name="" field="versieIMRO"/>
+    <alias index="11" name="" field="verwijzingNaarObjectgerichteTekst"/>
+    <alias index="12" name="" field="verwijzingNaarTekst"/>
+    <alias index="13" name="" field="dossierID"/>
+    <alias index="14" name="" field="dossierStatus"/>
+    <alias index="15" name="" field="datum"/>
+    <alias index="16" name="" field="verwijzingNaarExternPlan"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <defaults>
-    <default field="fid" applyOnUpdate="0" expression=""/>
-    <default field="bestemmingshoofdgroep" applyOnUpdate="0" expression=""/>
-    <default field="historisch" applyOnUpdate="0" expression=""/>
-    <default field="hoofdfuncties" applyOnUpdate="0" expression=""/>
-    <default field="identificatie" applyOnUpdate="0" expression=""/>
-    <default field="naam" applyOnUpdate="0" expression=""/>
-    <default field="ondergeschikteFuncties" applyOnUpdate="0" expression=""/>
-    <default field="plangebied" applyOnUpdate="0" expression=""/>
-    <default field="planstatus" applyOnUpdate="0" expression=""/>
-    <default field="typePlan" applyOnUpdate="0" expression=""/>
-    <default field="versieIMRO" applyOnUpdate="0" expression=""/>
-    <default field="verwijzingNaarObjectgerichteTekst" applyOnUpdate="0" expression=""/>
-    <default field="verwijzingNaarTekst" applyOnUpdate="0" expression=""/>
-    <default field="dossierID" applyOnUpdate="0" expression=""/>
-    <default field="dossierStatus" applyOnUpdate="0" expression=""/>
-    <default field="datum" applyOnUpdate="0" expression=""/>
-    <default field="verwijzingNaarExternPlan" applyOnUpdate="0" expression=""/>
+    <default applyOnUpdate="0" expression="" field="fid"/>
+    <default applyOnUpdate="0" expression="" field="bestemmingshoofdgroep"/>
+    <default applyOnUpdate="0" expression="" field="historisch"/>
+    <default applyOnUpdate="0" expression="" field="hoofdfuncties"/>
+    <default applyOnUpdate="0" expression="" field="identificatie"/>
+    <default applyOnUpdate="0" expression="" field="naam"/>
+    <default applyOnUpdate="0" expression="" field="ondergeschikteFuncties"/>
+    <default applyOnUpdate="0" expression="" field="plangebied"/>
+    <default applyOnUpdate="0" expression="" field="planstatus"/>
+    <default applyOnUpdate="0" expression="" field="typePlan"/>
+    <default applyOnUpdate="0" expression="" field="versieIMRO"/>
+    <default applyOnUpdate="0" expression="" field="verwijzingNaarObjectgerichteTekst"/>
+    <default applyOnUpdate="0" expression="" field="verwijzingNaarTekst"/>
+    <default applyOnUpdate="0" expression="" field="dossierID"/>
+    <default applyOnUpdate="0" expression="" field="dossierStatus"/>
+    <default applyOnUpdate="0" expression="" field="datum"/>
+    <default applyOnUpdate="0" expression="" field="verwijzingNaarExternPlan"/>
   </defaults>
   <constraints>
-    <constraint field="fid" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="bestemmingshoofdgroep" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="historisch" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="hoofdfuncties" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="identificatie" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="naam" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="ondergeschikteFuncties" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="plangebied" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="planstatus" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="typePlan" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="versieIMRO" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="verwijzingNaarObjectgerichteTekst" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="verwijzingNaarTekst" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="dossierID" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="dossierStatus" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="datum" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
-    <constraint field="verwijzingNaarExternPlan" exp_strength="0" unique_strength="0" notnull_strength="0" constraints="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="fid" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="bestemmingshoofdgroep" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="historisch" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="hoofdfuncties" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="identificatie" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="naam" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="ondergeschikteFuncties" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="plangebied" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="planstatus" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="typePlan" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="versieIMRO" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="verwijzingNaarObjectgerichteTekst" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="verwijzingNaarTekst" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="dossierID" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="dossierStatus" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="datum" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="verwijzingNaarExternPlan" constraints="0" notnull_strength="0"/>
   </constraints>
   <constraintExpressions>
-    <constraint field="fid" exp="" desc=""/>
-    <constraint field="bestemmingshoofdgroep" exp="" desc=""/>
-    <constraint field="historisch" exp="" desc=""/>
-    <constraint field="hoofdfuncties" exp="" desc=""/>
-    <constraint field="identificatie" exp="" desc=""/>
-    <constraint field="naam" exp="" desc=""/>
-    <constraint field="ondergeschikteFuncties" exp="" desc=""/>
-    <constraint field="plangebied" exp="" desc=""/>
-    <constraint field="planstatus" exp="" desc=""/>
-    <constraint field="typePlan" exp="" desc=""/>
-    <constraint field="versieIMRO" exp="" desc=""/>
-    <constraint field="verwijzingNaarObjectgerichteTekst" exp="" desc=""/>
-    <constraint field="verwijzingNaarTekst" exp="" desc=""/>
-    <constraint field="dossierID" exp="" desc=""/>
-    <constraint field="dossierStatus" exp="" desc=""/>
-    <constraint field="datum" exp="" desc=""/>
-    <constraint field="verwijzingNaarExternPlan" exp="" desc=""/>
+    <constraint exp="" field="fid" desc=""/>
+    <constraint exp="" field="bestemmingshoofdgroep" desc=""/>
+    <constraint exp="" field="historisch" desc=""/>
+    <constraint exp="" field="hoofdfuncties" desc=""/>
+    <constraint exp="" field="identificatie" desc=""/>
+    <constraint exp="" field="naam" desc=""/>
+    <constraint exp="" field="ondergeschikteFuncties" desc=""/>
+    <constraint exp="" field="plangebied" desc=""/>
+    <constraint exp="" field="planstatus" desc=""/>
+    <constraint exp="" field="typePlan" desc=""/>
+    <constraint exp="" field="versieIMRO" desc=""/>
+    <constraint exp="" field="verwijzingNaarObjectgerichteTekst" desc=""/>
+    <constraint exp="" field="verwijzingNaarTekst" desc=""/>
+    <constraint exp="" field="dossierID" desc=""/>
+    <constraint exp="" field="dossierStatus" desc=""/>
+    <constraint exp="" field="datum" desc=""/>
+    <constraint exp="" field="verwijzingNaarExternPlan" desc=""/>
   </constraintExpressions>
   <expressionfields/>
-  <attributeactions>
-    <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
-    <actionsetting type="1" capture="0" name="Open text link(s) in browser " notificationMessage="" shortTitle="" icon="" action="&#xa;from qgis.core import QgsMessageLog&#xa;from qgis.PyQt.QtGui import QDesktopServices&#xa;from qgis.PyQt.QtCore import QUrl&#xa;&#xa;urls = &quot;&quot;&#xa;if &quot;[%verwijzingNaarTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarTekst%]&quot;&#xa;elif &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;&#xa;&#xa;for url in urls.split(','):&#xa;    QDesktopServices().openUrl(QUrl(url))&#xa;" id="{67db1afd-8c2a-4fd9-acc7-8499b14cce46}" isEnabledOnlyWhenEditable="0">
-      <actionScope id="Canvas"/>
-      <actionScope id="Feature"/>
-    </actionsetting>
-  </attributeactions>
-  <attributetableconfig sortOrder="0" actionWidgetStyle="dropDown" sortExpression="">
+  <attributetableconfig sortExpression="" sortOrder="0" actionWidgetStyle="dropDown">
     <columns>
-      <column type="field" name="fid" hidden="0" width="-1"/>
-      <column type="field" name="bestemmingshoofdgroep" hidden="0" width="-1"/>
-      <column type="field" name="historisch" hidden="0" width="-1"/>
-      <column type="field" name="hoofdfuncties" hidden="0" width="-1"/>
-      <column type="field" name="identificatie" hidden="0" width="-1"/>
-      <column type="field" name="naam" hidden="0" width="-1"/>
-      <column type="field" name="ondergeschikteFuncties" hidden="0" width="-1"/>
-      <column type="field" name="plangebied" hidden="0" width="-1"/>
-      <column type="field" name="planstatus" hidden="0" width="-1"/>
-      <column type="field" name="typePlan" hidden="0" width="-1"/>
-      <column type="field" name="versieIMRO" hidden="0" width="-1"/>
-      <column type="field" name="verwijzingNaarObjectgerichteTekst" hidden="0" width="-1"/>
-      <column type="field" name="verwijzingNaarTekst" hidden="0" width="-1"/>
-      <column type="field" name="dossierID" hidden="0" width="-1"/>
-      <column type="field" name="dossierStatus" hidden="0" width="-1"/>
-      <column type="field" name="datum" hidden="0" width="-1"/>
-      <column type="field" name="verwijzingNaarExternPlan" hidden="0" width="-1"/>
-      <column type="actions" hidden="1" width="-1"/>
+      <column width="-1" hidden="0" type="field" name="fid"/>
+      <column width="-1" hidden="0" type="field" name="bestemmingshoofdgroep"/>
+      <column width="-1" hidden="0" type="field" name="historisch"/>
+      <column width="-1" hidden="0" type="field" name="hoofdfuncties"/>
+      <column width="-1" hidden="0" type="field" name="identificatie"/>
+      <column width="-1" hidden="0" type="field" name="naam"/>
+      <column width="-1" hidden="0" type="field" name="ondergeschikteFuncties"/>
+      <column width="-1" hidden="0" type="field" name="plangebied"/>
+      <column width="-1" hidden="0" type="field" name="planstatus"/>
+      <column width="-1" hidden="0" type="field" name="typePlan"/>
+      <column width="-1" hidden="0" type="field" name="versieIMRO"/>
+      <column width="-1" hidden="0" type="field" name="verwijzingNaarObjectgerichteTekst"/>
+      <column width="-1" hidden="0" type="field" name="verwijzingNaarTekst"/>
+      <column width="-1" hidden="0" type="field" name="dossierID"/>
+      <column width="-1" hidden="0" type="field" name="dossierStatus"/>
+      <column width="-1" hidden="0" type="field" name="datum"/>
+      <column width="-1" hidden="0" type="field" name="verwijzingNaarExternPlan"/>
+      <column width="-1" hidden="1" type="actions"/>
     </columns>
   </attributetableconfig>
   <conditionalstyles>
@@ -555,23 +549,23 @@ def my_form_open(dialog, layer, feature):
   <featformsuppress>0</featformsuppress>
   <editorlayout>generatedlayout</editorlayout>
   <editable>
-    <field editable="1" name="bestemmingshoofdgroep"/>
-    <field editable="1" name="datum"/>
-    <field editable="1" name="dossierID"/>
-    <field editable="1" name="dossierStatus"/>
-    <field editable="1" name="fid"/>
-    <field editable="1" name="historisch"/>
-    <field editable="1" name="hoofdfuncties"/>
-    <field editable="1" name="identificatie"/>
-    <field editable="1" name="naam"/>
-    <field editable="1" name="ondergeschikteFuncties"/>
-    <field editable="1" name="plangebied"/>
-    <field editable="1" name="planstatus"/>
-    <field editable="1" name="typePlan"/>
-    <field editable="1" name="versieIMRO"/>
-    <field editable="1" name="verwijzingNaarExternPlan"/>
-    <field editable="1" name="verwijzingNaarObjectgerichteTekst"/>
-    <field editable="1" name="verwijzingNaarTekst"/>
+    <field name="bestemmingshoofdgroep" editable="1"/>
+    <field name="datum" editable="1"/>
+    <field name="dossierID" editable="1"/>
+    <field name="dossierStatus" editable="1"/>
+    <field name="fid" editable="1"/>
+    <field name="historisch" editable="1"/>
+    <field name="hoofdfuncties" editable="1"/>
+    <field name="identificatie" editable="1"/>
+    <field name="naam" editable="1"/>
+    <field name="ondergeschikteFuncties" editable="1"/>
+    <field name="plangebied" editable="1"/>
+    <field name="planstatus" editable="1"/>
+    <field name="typePlan" editable="1"/>
+    <field name="versieIMRO" editable="1"/>
+    <field name="verwijzingNaarExternPlan" editable="1"/>
+    <field name="verwijzingNaarObjectgerichteTekst" editable="1"/>
+    <field name="verwijzingNaarTekst" editable="1"/>
   </editable>
   <labelOnTop>
     <field name="bestemmingshoofdgroep" labelOnTop="0"/>

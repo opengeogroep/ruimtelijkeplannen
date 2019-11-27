@@ -1,24 +1,25 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis hasScaleBasedVisibilityFlag="0" version="3.10.0-A Coruña" styleCategories="AllStyleCategories" maxScale="0" simplifyDrawingHints="1" simplifyLocal="1" labelsEnabled="0" readOnly="0" minScale="1e+8" simplifyDrawingTol="1" simplifyAlgorithm="0" simplifyMaxScale="1">
+<qgis simplifyDrawingTol="1" simplifyMaxScale="1" version="3.10.0-A Coruña" minScale="1e+8" simplifyDrawingHints="1" maxScale="0" styleCategories="LayerConfiguration|Symbology|Symbology3D|Labeling|Fields|Forms|MapTips|Diagrams|AttributeTable|Rendering|CustomProperties|GeometryOptions" simplifyAlgorithm="0" labelsEnabled="0" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" readOnly="0">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>1</Searchable>
   </flags>
-  <renderer-v2 enableorderby="0" symbollevels="0" type="RuleRenderer" forceraster="0">
+  <renderer-v2 type="RuleRenderer" forceraster="0" symbollevels="0" enableorderby="0">
     <rules key="{50dcf9d9-4f52-415e-a5d9-221bc835d490}">
-      <rule symbol="0" label="geluidzone" filter="gebiedsaanduidinggroep = 'geluidzone'" key="{f1d37971-e392-40e5-a1b2-bdacd38a18cd}"/>
-      <rule symbol="1" label="luchtvaartverkeerzone" filter="gebiedsaanduidinggroep = 'luchtvaartverkeerzone'" key="{1bf4738d-216f-4c27-9951-2013051bfbb3}"/>
-      <rule checkstate="0" symbol="2" label="milieuzone" filter="gebiedsaanduidinggroep = 'milieuzone'" key="{71cbb264-73d6-4710-a57b-136f2f9ef0af}"/>
-      <rule symbol="3" label="reconstructiewetzone" filter="gebiedsaanduidinggroep = 'reconstructiewetzone'" key="{c9c32771-2cb9-4a64-b099-74beaabfa52b}"/>
-      <rule symbol="4" label="veiligheidszone" filter="gebiedsaanduidinggroep = 'veiligheidszone'" key="{51a06115-fd3e-461a-9d3d-f92db38e6376}"/>
-      <rule symbol="5" label="vrijwaringszone" filter="gebiedsaanduidinggroep = 'vrijwaringszone'" key="{b6197ee9-e739-4a76-bea4-b204378f5cc2}"/>
-      <rule symbol="6" label="wro-zone" filter="gebiedsaanduidinggroep = 'wro-zone'" key="{15657e02-d05d-45dc-9b79-1317e8531801}"/>
-      <rule symbol="7" label="overig" filter="gebiedsaanduidinggroep = 'overig'" key="{8246c233-2402-4629-aa00-2049e84a99e0}"/>
+      <rule filter="gebiedsaanduidinggroep = 'geluidzone'" key="{f1d37971-e392-40e5-a1b2-bdacd38a18cd}" label="geluidzone" symbol="0"/>
+      <rule filter="gebiedsaanduidinggroep = 'luchtvaartverkeerzone'" key="{1bf4738d-216f-4c27-9951-2013051bfbb3}" label="luchtvaartverkeerzone" symbol="1"/>
+      <rule filter="gebiedsaanduidinggroep = 'milieuzone'" key="{71cbb264-73d6-4710-a57b-136f2f9ef0af}" label="milieuzone" checkstate="0" symbol="2"/>
+      <rule filter="gebiedsaanduidinggroep = 'reconstructiewetzone'" key="{c9c32771-2cb9-4a64-b099-74beaabfa52b}" label="reconstructiewetzone" symbol="3"/>
+      <rule filter="gebiedsaanduidinggroep = 'veiligheidszone'" key="{51a06115-fd3e-461a-9d3d-f92db38e6376}" label="veiligheidszone" symbol="4"/>
+      <rule filter="gebiedsaanduidinggroep = 'vrijwaringszone'" key="{b6197ee9-e739-4a76-bea4-b204378f5cc2}" label="vrijwaringszone" symbol="5"/>
+      <rule filter="gebiedsaanduidinggroep = 'wro-zone'" key="{15657e02-d05d-45dc-9b79-1317e8531801}" label="wro-zone" symbol="6"/>
+      <rule filter="gebiedsaanduidinggroep = 'wetgevingzone'" key="{b1bf6065-d401-4959-9859-f8400ba7f6d9}" label="wetgevingzone" symbol="7"/>
+      <rule filter="gebiedsaanduidinggroep = 'overig'" key="{503ab12c-5870-4b69-8199-4a8744806351}" label="overig" symbol="8"/>
     </rules>
     <symbols>
       <symbol clip_to_extent="1" type="fill" alpha="1" name="0" force_rhr="0">
-        <layer class="SimpleLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="0"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -37,17 +38,17 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer class="MarkerLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="MarkerLine" enabled="1" pass="0">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
-          <prop k="interval" v="50"/>
+          <prop k="interval" v="40"/>
           <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MapUnit"/>
           <prop k="offset" v="0"/>
@@ -61,19 +62,19 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
           <symbol clip_to_extent="1" type="marker" alpha="1" name="@0@1" force_rhr="0">
-            <layer class="SimpleMarker" locked="0" pass="0" enabled="1">
+            <layer locked="0" class="SimpleMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="255,155,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="name" v="triangle"/>
-              <prop k="offset" v="0,-5"/>
+              <prop k="offset" v="0,-3"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MapUnit"/>
               <prop k="outline_color" v="255,155,0,255"/>
@@ -82,15 +83,15 @@
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
-              <prop k="size" v="10"/>
+              <prop k="size" v="6"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option value="" type="QString" name="name"/>
+                  <Option type="QString" name="name" value=""/>
                   <Option name="properties"/>
-                  <Option value="collection" type="QString" name="type"/>
+                  <Option type="QString" name="type" value="collection"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -98,7 +99,7 @@
         </layer>
       </symbol>
       <symbol clip_to_extent="1" type="fill" alpha="1" name="1" force_rhr="0">
-        <layer class="SimpleLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="0"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -117,17 +118,17 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer class="MarkerLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="MarkerLine" enabled="1" pass="0">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
-          <prop k="interval" v="50"/>
+          <prop k="interval" v="40"/>
           <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MapUnit"/>
           <prop k="offset" v="0"/>
@@ -141,19 +142,19 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
           <symbol clip_to_extent="1" type="marker" alpha="1" name="@1@1" force_rhr="0">
-            <layer class="SimpleMarker" locked="0" pass="0" enabled="1">
+            <layer locked="0" class="SimpleMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="155,50,205,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="name" v="triangle"/>
-              <prop k="offset" v="0,-5"/>
+              <prop k="offset" v="0,-3"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MapUnit"/>
               <prop k="outline_color" v="155,50,205,255"/>
@@ -162,15 +163,15 @@
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
-              <prop k="size" v="10"/>
+              <prop k="size" v="6"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option value="" type="QString" name="name"/>
+                  <Option type="QString" name="name" value=""/>
                   <Option name="properties"/>
-                  <Option value="collection" type="QString" name="type"/>
+                  <Option type="QString" name="type" value="collection"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -178,7 +179,7 @@
         </layer>
       </symbol>
       <symbol clip_to_extent="1" type="fill" alpha="1" name="2" force_rhr="0">
-        <layer class="SimpleLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="0"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -197,17 +198,17 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer class="MarkerLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="MarkerLine" enabled="1" pass="0">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
-          <prop k="interval" v="50"/>
+          <prop k="interval" v="40"/>
           <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MapUnit"/>
           <prop k="offset" v="0"/>
@@ -221,19 +222,19 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
           <symbol clip_to_extent="1" type="marker" alpha="1" name="@2@1" force_rhr="0">
-            <layer class="SimpleMarker" locked="0" pass="0" enabled="1">
+            <layer locked="0" class="SimpleMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="0,155,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="name" v="triangle"/>
-              <prop k="offset" v="0,-5"/>
+              <prop k="offset" v="0,-3"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MapUnit"/>
               <prop k="outline_color" v="0,155,0,255"/>
@@ -242,15 +243,15 @@
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
-              <prop k="size" v="10"/>
+              <prop k="size" v="6"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option value="" type="QString" name="name"/>
+                  <Option type="QString" name="name" value=""/>
                   <Option name="properties"/>
-                  <Option value="collection" type="QString" name="type"/>
+                  <Option type="QString" name="type" value="collection"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -258,7 +259,7 @@
         </layer>
       </symbol>
       <symbol clip_to_extent="1" type="fill" alpha="1" name="3" force_rhr="0">
-        <layer class="SimpleLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="0"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -277,17 +278,17 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer class="MarkerLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="MarkerLine" enabled="1" pass="0">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
-          <prop k="interval" v="50"/>
+          <prop k="interval" v="40"/>
           <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MapUnit"/>
           <prop k="offset" v="0"/>
@@ -301,19 +302,19 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
           <symbol clip_to_extent="1" type="marker" alpha="1" name="@3@1" force_rhr="0">
-            <layer class="SimpleMarker" locked="0" pass="0" enabled="1">
+            <layer locked="0" class="SimpleMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="56,133,94,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="name" v="triangle"/>
-              <prop k="offset" v="0,-5"/>
+              <prop k="offset" v="0,-3"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MapUnit"/>
               <prop k="outline_color" v="56,133,94,255"/>
@@ -322,15 +323,15 @@
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
-              <prop k="size" v="10"/>
+              <prop k="size" v="6"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option value="" type="QString" name="name"/>
+                  <Option type="QString" name="name" value=""/>
                   <Option name="properties"/>
-                  <Option value="collection" type="QString" name="type"/>
+                  <Option type="QString" name="type" value="collection"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -338,7 +339,7 @@
         </layer>
       </symbol>
       <symbol clip_to_extent="1" type="fill" alpha="1" name="4" force_rhr="0">
-        <layer class="SimpleLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="0"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -357,17 +358,17 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer class="MarkerLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="MarkerLine" enabled="1" pass="0">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
-          <prop k="interval" v="50"/>
+          <prop k="interval" v="40"/>
           <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MapUnit"/>
           <prop k="offset" v="0"/>
@@ -381,19 +382,19 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
           <symbol clip_to_extent="1" type="marker" alpha="1" name="@4@1" force_rhr="0">
-            <layer class="SimpleMarker" locked="0" pass="0" enabled="1">
+            <layer locked="0" class="SimpleMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="0,0,255,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="name" v="triangle"/>
-              <prop k="offset" v="0,-5"/>
+              <prop k="offset" v="0,-3"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MapUnit"/>
               <prop k="outline_color" v="0,0,255,255"/>
@@ -402,15 +403,15 @@
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
-              <prop k="size" v="10"/>
+              <prop k="size" v="6"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option value="" type="QString" name="name"/>
+                  <Option type="QString" name="name" value=""/>
                   <Option name="properties"/>
-                  <Option value="collection" type="QString" name="type"/>
+                  <Option type="QString" name="type" value="collection"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -418,7 +419,7 @@
         </layer>
       </symbol>
       <symbol clip_to_extent="1" type="fill" alpha="1" name="5" force_rhr="0">
-        <layer class="SimpleLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="0"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -437,17 +438,17 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer class="MarkerLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="MarkerLine" enabled="1" pass="0">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
-          <prop k="interval" v="50"/>
+          <prop k="interval" v="40"/>
           <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MapUnit"/>
           <prop k="offset" v="0"/>
@@ -461,19 +462,19 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
           <symbol clip_to_extent="1" type="marker" alpha="1" name="@5@1" force_rhr="0">
-            <layer class="SimpleMarker" locked="0" pass="0" enabled="1">
+            <layer locked="0" class="SimpleMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="55,205,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="name" v="triangle"/>
-              <prop k="offset" v="0,-5"/>
+              <prop k="offset" v="0,-3"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MapUnit"/>
               <prop k="outline_color" v="55,205,0,255"/>
@@ -482,15 +483,15 @@
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
-              <prop k="size" v="10"/>
+              <prop k="size" v="6"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option value="" type="QString" name="name"/>
+                  <Option type="QString" name="name" value=""/>
                   <Option name="properties"/>
-                  <Option value="collection" type="QString" name="type"/>
+                  <Option type="QString" name="type" value="collection"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -498,7 +499,7 @@
         </layer>
       </symbol>
       <symbol clip_to_extent="1" type="fill" alpha="1" name="6" force_rhr="0">
-        <layer class="SimpleLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="0"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -517,17 +518,17 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer class="MarkerLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="MarkerLine" enabled="1" pass="0">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
-          <prop k="interval" v="50"/>
+          <prop k="interval" v="40"/>
           <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MapUnit"/>
           <prop k="offset" v="0"/>
@@ -541,19 +542,19 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
           <symbol clip_to_extent="1" type="marker" alpha="1" name="@6@1" force_rhr="0">
-            <layer class="SimpleMarker" locked="0" pass="0" enabled="1">
+            <layer locked="0" class="SimpleMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="255,0,0,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="name" v="triangle"/>
-              <prop k="offset" v="0,-5"/>
+              <prop k="offset" v="0,-3"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MapUnit"/>
               <prop k="outline_color" v="255,0,0,255"/>
@@ -562,15 +563,15 @@
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
-              <prop k="size" v="10"/>
+              <prop k="size" v="6"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option value="" type="QString" name="name"/>
+                  <Option type="QString" name="name" value=""/>
                   <Option name="properties"/>
-                  <Option value="collection" type="QString" name="type"/>
+                  <Option type="QString" name="type" value="collection"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -578,7 +579,87 @@
         </layer>
       </symbol>
       <symbol clip_to_extent="1" type="fill" alpha="1" name="7" force_rhr="0">
-        <layer class="SimpleLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
+          <prop k="capstyle" v="square"/>
+          <prop k="customdash" v="0"/>
+          <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="customdash_unit" v="MM"/>
+          <prop k="draw_inside_polygon" v="0"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="line_color" v="255,0,0,255"/>
+          <prop k="line_style" v="solid"/>
+          <prop k="line_width" v="0.4"/>
+          <prop k="line_width_unit" v="MM"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="ring_filter" v="0"/>
+          <prop k="use_custom_dash" v="0"/>
+          <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option type="QString" name="name" value=""/>
+              <Option name="properties"/>
+              <Option type="QString" name="type" value="collection"/>
+            </Option>
+          </data_defined_properties>
+        </layer>
+        <layer locked="0" class="MarkerLine" enabled="1" pass="0">
+          <prop k="average_angle_length" v="4"/>
+          <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="average_angle_unit" v="MM"/>
+          <prop k="interval" v="40"/>
+          <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="interval_unit" v="MapUnit"/>
+          <prop k="offset" v="0"/>
+          <prop k="offset_along_line" v="0"/>
+          <prop k="offset_along_line_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_along_line_unit" v="MM"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="placement" v="interval"/>
+          <prop k="ring_filter" v="0"/>
+          <prop k="rotate" v="1"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option type="QString" name="name" value=""/>
+              <Option name="properties"/>
+              <Option type="QString" name="type" value="collection"/>
+            </Option>
+          </data_defined_properties>
+          <symbol clip_to_extent="1" type="marker" alpha="1" name="@7@1" force_rhr="0">
+            <layer locked="0" class="SimpleMarker" enabled="1" pass="0">
+              <prop k="angle" v="0"/>
+              <prop k="color" v="255,0,0,255"/>
+              <prop k="horizontal_anchor_point" v="1"/>
+              <prop k="joinstyle" v="bevel"/>
+              <prop k="name" v="triangle"/>
+              <prop k="offset" v="0,-3"/>
+              <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="offset_unit" v="MapUnit"/>
+              <prop k="outline_color" v="255,0,0,255"/>
+              <prop k="outline_style" v="solid"/>
+              <prop k="outline_width" v="0"/>
+              <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="outline_width_unit" v="MM"/>
+              <prop k="scale_method" v="area"/>
+              <prop k="size" v="6"/>
+              <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+              <prop k="size_unit" v="MapUnit"/>
+              <prop k="vertical_anchor_point" v="1"/>
+              <data_defined_properties>
+                <Option type="Map">
+                  <Option type="QString" name="name" value=""/>
+                  <Option name="properties"/>
+                  <Option type="QString" name="type" value="collection"/>
+                </Option>
+              </data_defined_properties>
+            </layer>
+          </symbol>
+        </layer>
+      </symbol>
+      <symbol clip_to_extent="1" type="fill" alpha="1" name="8" force_rhr="0">
+        <layer locked="0" class="SimpleLine" enabled="1" pass="0">
           <prop k="capstyle" v="square"/>
           <prop k="customdash" v="0"/>
           <prop k="customdash_map_unit_scale" v="3x:0,0,0,0,0,0"/>
@@ -597,17 +678,17 @@
           <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
-        <layer class="MarkerLine" locked="0" pass="0" enabled="1">
+        <layer locked="0" class="MarkerLine" enabled="1" pass="0">
           <prop k="average_angle_length" v="4"/>
           <prop k="average_angle_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="average_angle_unit" v="MM"/>
-          <prop k="interval" v="50"/>
+          <prop k="interval" v="40"/>
           <prop k="interval_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="interval_unit" v="MapUnit"/>
           <prop k="offset" v="0"/>
@@ -621,19 +702,19 @@
           <prop k="rotate" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
-          <symbol clip_to_extent="1" type="marker" alpha="1" name="@7@1" force_rhr="0">
-            <layer class="SimpleMarker" locked="0" pass="0" enabled="1">
+          <symbol clip_to_extent="1" type="marker" alpha="1" name="@8@1" force_rhr="0">
+            <layer locked="0" class="SimpleMarker" enabled="1" pass="0">
               <prop k="angle" v="0"/>
               <prop k="color" v="100,100,100,255"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="name" v="triangle"/>
-              <prop k="offset" v="0,-5"/>
+              <prop k="offset" v="0,-3"/>
               <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="offset_unit" v="MapUnit"/>
               <prop k="outline_color" v="100,100,100,255"/>
@@ -642,15 +723,15 @@
               <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="outline_width_unit" v="MM"/>
               <prop k="scale_method" v="area"/>
-              <prop k="size" v="10"/>
+              <prop k="size" v="6"/>
               <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
               <prop k="size_unit" v="MapUnit"/>
               <prop k="vertical_anchor_point" v="1"/>
               <data_defined_properties>
                 <Option type="Map">
-                  <Option value="" type="QString" name="name"/>
+                  <Option type="QString" name="name" value=""/>
                   <Option name="properties"/>
-                  <Option value="collection" type="QString" name="type"/>
+                  <Option type="QString" name="type" value="collection"/>
                 </Option>
               </data_defined_properties>
             </layer>
@@ -660,7 +741,7 @@
     </symbols>
   </renderer-v2>
   <customproperties>
-    <property value="0" key="embeddedWidgets/count"/>
+    <property key="embeddedWidgets/count" value="0"/>
     <property key="variableNames"/>
     <property key="variableValues"/>
   </customproperties>
@@ -668,17 +749,17 @@
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
   <SingleCategoryDiagramRenderer diagramType="Histogram" attributeLegend="1">
-    <DiagramCategory penColor="#000000" enabled="0" backgroundAlpha="255" barWidth="5" penAlpha="255" minScaleDenominator="0" maxScaleDenominator="1e+8" lineSizeType="MM" sizeScale="3x:0,0,0,0,0,0" scaleDependency="Area" sizeType="MM" lineSizeScale="3x:0,0,0,0,0,0" labelPlacementMethod="XHeight" backgroundColor="#ffffff" penWidth="0" height="15" minimumSize="0" diagramOrientation="Up" width="15" rotationOffset="270" scaleBasedVisibility="0" opacity="1">
-      <fontProperties style="" description="Sans Serif,9,-1,5,50,0,0,0,0,0"/>
-      <attribute field="" label="" color="#000000"/>
+    <DiagramCategory scaleDependency="Area" backgroundColor="#ffffff" lineSizeType="MM" height="15" sizeScale="3x:0,0,0,0,0,0" lineSizeScale="3x:0,0,0,0,0,0" opacity="1" penColor="#000000" minScaleDenominator="0" minimumSize="0" enabled="0" rotationOffset="270" penAlpha="255" width="15" diagramOrientation="Up" penWidth="0" maxScaleDenominator="1e+8" barWidth="5" sizeType="MM" scaleBasedVisibility="0" backgroundAlpha="255" labelPlacementMethod="XHeight">
+      <fontProperties description="Sans Serif,9,-1,5,50,0,0,0,0,0" style=""/>
+      <attribute label="" color="#000000" field=""/>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings obstacle="0" zIndex="0" showAll="1" dist="0" placement="1" linePlacementFlags="18" priority="0">
+  <DiagramLayerSettings placement="1" zIndex="0" obstacle="0" dist="0" linePlacementFlags="18" showAll="1" priority="0">
     <properties>
       <Option type="Map">
-        <Option value="" type="QString" name="name"/>
+        <Option type="QString" name="name" value=""/>
         <Option name="properties"/>
-        <Option value="collection" type="QString" name="type"/>
+        <Option type="QString" name="type" value="collection"/>
       </Option>
     </properties>
   </DiagramLayerSettings>
@@ -686,9 +767,9 @@
     <activeChecks/>
     <checkConfiguration type="Map">
       <Option type="Map" name="QgsGeometryGapCheck">
-        <Option value="0" type="double" name="allowedGapsBuffer"/>
-        <Option value="false" type="bool" name="allowedGapsEnabled"/>
-        <Option value="" type="QString" name="allowedGapsLayer"/>
+        <Option type="double" name="allowedGapsBuffer" value="0"/>
+        <Option type="bool" name="allowedGapsEnabled" value="false"/>
+        <Option type="QString" name="allowedGapsLayer" value=""/>
       </Option>
     </checkConfiguration>
   </geometryOptions>
@@ -828,69 +909,69 @@
     </field>
   </fieldConfiguration>
   <aliases>
-    <alias field="fid" name="" index="0"/>
-    <alias field="artikelnummer" name="" index="1"/>
-    <alias field="bestemmingsvlak" name="" index="2"/>
-    <alias field="gebiedsaanduidinggroep" name="" index="3"/>
-    <alias field="historisch" name="" index="4"/>
-    <alias field="hoofdfuncties" name="" index="5"/>
-    <alias field="identificatie" name="" index="6"/>
-    <alias field="naam" name="" index="7"/>
-    <alias field="ondergeschikteFuncties" name="" index="8"/>
-    <alias field="plangebied" name="" index="9"/>
-    <alias field="planstatus" name="" index="10"/>
-    <alias field="typePlan" name="" index="11"/>
-    <alias field="versieIMRO" name="" index="12"/>
-    <alias field="verwijzingNaarObjectgerichteTekst" name="" index="13"/>
-    <alias field="verwijzingNaarTekst" name="" index="14"/>
-    <alias field="dossierID" name="" index="15"/>
-    <alias field="dossierStatus" name="" index="16"/>
-    <alias field="datum" name="" index="17"/>
-    <alias field="verwijzingNaarExternPlan" name="" index="18"/>
+    <alias index="0" name="" field="fid"/>
+    <alias index="1" name="" field="artikelnummer"/>
+    <alias index="2" name="" field="bestemmingsvlak"/>
+    <alias index="3" name="" field="gebiedsaanduidinggroep"/>
+    <alias index="4" name="" field="historisch"/>
+    <alias index="5" name="" field="hoofdfuncties"/>
+    <alias index="6" name="" field="identificatie"/>
+    <alias index="7" name="" field="naam"/>
+    <alias index="8" name="" field="ondergeschikteFuncties"/>
+    <alias index="9" name="" field="plangebied"/>
+    <alias index="10" name="" field="planstatus"/>
+    <alias index="11" name="" field="typePlan"/>
+    <alias index="12" name="" field="versieIMRO"/>
+    <alias index="13" name="" field="verwijzingNaarObjectgerichteTekst"/>
+    <alias index="14" name="" field="verwijzingNaarTekst"/>
+    <alias index="15" name="" field="dossierID"/>
+    <alias index="16" name="" field="dossierStatus"/>
+    <alias index="17" name="" field="datum"/>
+    <alias index="18" name="" field="verwijzingNaarExternPlan"/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
   <defaults>
-    <default field="fid" applyOnUpdate="0" expression=""/>
-    <default field="artikelnummer" applyOnUpdate="0" expression=""/>
-    <default field="bestemmingsvlak" applyOnUpdate="0" expression=""/>
-    <default field="gebiedsaanduidinggroep" applyOnUpdate="0" expression=""/>
-    <default field="historisch" applyOnUpdate="0" expression=""/>
-    <default field="hoofdfuncties" applyOnUpdate="0" expression=""/>
-    <default field="identificatie" applyOnUpdate="0" expression=""/>
-    <default field="naam" applyOnUpdate="0" expression=""/>
-    <default field="ondergeschikteFuncties" applyOnUpdate="0" expression=""/>
-    <default field="plangebied" applyOnUpdate="0" expression=""/>
-    <default field="planstatus" applyOnUpdate="0" expression=""/>
-    <default field="typePlan" applyOnUpdate="0" expression=""/>
-    <default field="versieIMRO" applyOnUpdate="0" expression=""/>
-    <default field="verwijzingNaarObjectgerichteTekst" applyOnUpdate="0" expression=""/>
-    <default field="verwijzingNaarTekst" applyOnUpdate="0" expression=""/>
-    <default field="dossierID" applyOnUpdate="0" expression=""/>
-    <default field="dossierStatus" applyOnUpdate="0" expression=""/>
-    <default field="datum" applyOnUpdate="0" expression=""/>
-    <default field="verwijzingNaarExternPlan" applyOnUpdate="0" expression=""/>
+    <default applyOnUpdate="0" expression="" field="fid"/>
+    <default applyOnUpdate="0" expression="" field="artikelnummer"/>
+    <default applyOnUpdate="0" expression="" field="bestemmingsvlak"/>
+    <default applyOnUpdate="0" expression="" field="gebiedsaanduidinggroep"/>
+    <default applyOnUpdate="0" expression="" field="historisch"/>
+    <default applyOnUpdate="0" expression="" field="hoofdfuncties"/>
+    <default applyOnUpdate="0" expression="" field="identificatie"/>
+    <default applyOnUpdate="0" expression="" field="naam"/>
+    <default applyOnUpdate="0" expression="" field="ondergeschikteFuncties"/>
+    <default applyOnUpdate="0" expression="" field="plangebied"/>
+    <default applyOnUpdate="0" expression="" field="planstatus"/>
+    <default applyOnUpdate="0" expression="" field="typePlan"/>
+    <default applyOnUpdate="0" expression="" field="versieIMRO"/>
+    <default applyOnUpdate="0" expression="" field="verwijzingNaarObjectgerichteTekst"/>
+    <default applyOnUpdate="0" expression="" field="verwijzingNaarTekst"/>
+    <default applyOnUpdate="0" expression="" field="dossierID"/>
+    <default applyOnUpdate="0" expression="" field="dossierStatus"/>
+    <default applyOnUpdate="0" expression="" field="datum"/>
+    <default applyOnUpdate="0" expression="" field="verwijzingNaarExternPlan"/>
   </defaults>
   <constraints>
-    <constraint constraints="0" field="fid" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="artikelnummer" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="bestemmingsvlak" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="gebiedsaanduidinggroep" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="historisch" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="hoofdfuncties" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="identificatie" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="naam" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="ondergeschikteFuncties" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="plangebied" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="planstatus" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="typePlan" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="versieIMRO" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="verwijzingNaarObjectgerichteTekst" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="verwijzingNaarTekst" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="dossierID" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="dossierStatus" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="datum" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint constraints="0" field="verwijzingNaarExternPlan" notnull_strength="0" unique_strength="0" exp_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="fid" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="artikelnummer" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="bestemmingsvlak" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="gebiedsaanduidinggroep" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="historisch" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="hoofdfuncties" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="identificatie" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="naam" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="ondergeschikteFuncties" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="plangebied" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="planstatus" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="typePlan" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="versieIMRO" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="verwijzingNaarObjectgerichteTekst" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="verwijzingNaarTekst" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="dossierID" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="dossierStatus" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="datum" constraints="0" notnull_strength="0"/>
+    <constraint unique_strength="0" exp_strength="0" field="verwijzingNaarExternPlan" constraints="0" notnull_strength="0"/>
   </constraints>
   <constraintExpressions>
     <constraint exp="" field="fid" desc=""/>
@@ -914,39 +995,28 @@
     <constraint exp="" field="verwijzingNaarExternPlan" desc=""/>
   </constraintExpressions>
   <expressionfields/>
-  <attributeactions>
-    <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
-    <actionsetting icon="" capture="0" type="1" id="{9f7658ac-6724-4eda-af0a-3cd2f27dbeba}" notificationMessage="" isEnabledOnlyWhenEditable="0" shortTitle="" name="Open text link(s) in browser " action="&#xa;from qgis.core import QgsMessageLog&#xa;from qgis.PyQt.QtGui import QDesktopServices&#xa;from qgis.PyQt.QtCore import QUrl&#xa;&#xa;urls = &quot;&quot;&#xa;if &quot;[%verwijzingNaarTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarTekst%]&quot;&#xa;elif &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;&#xa;&#xa;for url in urls.split(','):&#xa;    QDesktopServices().openUrl(QUrl(url))&#xa;">
-      <actionScope id="Canvas"/>
-      <actionScope id="Feature"/>
-    </actionsetting>
-    <actionsetting icon="" capture="0" type="1" id="{818e4745-e644-4afc-a3fa-b825320f014f}" notificationMessage="" isEnabledOnlyWhenEditable="0" shortTitle="" name="Open text link(s) in browser " action="&#xa;from qgis.core import QgsMessageLog&#xa;from qgis.PyQt.QtGui import QDesktopServices&#xa;from qgis.PyQt.QtCore import QUrl&#xa;&#xa;urls = &quot;&quot;&#xa;if &quot;[%verwijzingNaarTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarTekst%]&quot;&#xa;elif &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;&#xa;&#xa;for url in urls.split(','):&#xa;    QDesktopServices().openUrl(QUrl(url))&#xa;">
-      <actionScope id="Canvas"/>
-      <actionScope id="Feature"/>
-    </actionsetting>
-  </attributeactions>
-  <attributetableconfig actionWidgetStyle="dropDown" sortExpression="" sortOrder="0">
+  <attributetableconfig sortExpression="" sortOrder="0" actionWidgetStyle="dropDown">
     <columns>
-      <column type="field" name="fid" width="-1" hidden="0"/>
-      <column type="field" name="artikelnummer" width="-1" hidden="0"/>
-      <column type="field" name="bestemmingsvlak" width="-1" hidden="0"/>
-      <column type="field" name="gebiedsaanduidinggroep" width="-1" hidden="0"/>
-      <column type="field" name="historisch" width="-1" hidden="0"/>
-      <column type="field" name="hoofdfuncties" width="-1" hidden="0"/>
-      <column type="field" name="identificatie" width="-1" hidden="0"/>
-      <column type="field" name="naam" width="-1" hidden="0"/>
-      <column type="field" name="ondergeschikteFuncties" width="-1" hidden="0"/>
-      <column type="field" name="plangebied" width="-1" hidden="0"/>
-      <column type="field" name="planstatus" width="-1" hidden="0"/>
-      <column type="field" name="typePlan" width="-1" hidden="0"/>
-      <column type="field" name="versieIMRO" width="-1" hidden="0"/>
-      <column type="field" name="verwijzingNaarObjectgerichteTekst" width="-1" hidden="0"/>
-      <column type="field" name="verwijzingNaarTekst" width="-1" hidden="0"/>
-      <column type="field" name="dossierID" width="-1" hidden="0"/>
-      <column type="field" name="dossierStatus" width="-1" hidden="0"/>
-      <column type="field" name="datum" width="-1" hidden="0"/>
-      <column type="field" name="verwijzingNaarExternPlan" width="-1" hidden="0"/>
-      <column type="actions" width="-1" hidden="1"/>
+      <column width="-1" hidden="0" type="field" name="fid"/>
+      <column width="-1" hidden="0" type="field" name="artikelnummer"/>
+      <column width="-1" hidden="0" type="field" name="bestemmingsvlak"/>
+      <column width="-1" hidden="0" type="field" name="gebiedsaanduidinggroep"/>
+      <column width="-1" hidden="0" type="field" name="historisch"/>
+      <column width="-1" hidden="0" type="field" name="hoofdfuncties"/>
+      <column width="-1" hidden="0" type="field" name="identificatie"/>
+      <column width="-1" hidden="0" type="field" name="naam"/>
+      <column width="-1" hidden="0" type="field" name="ondergeschikteFuncties"/>
+      <column width="-1" hidden="0" type="field" name="plangebied"/>
+      <column width="-1" hidden="0" type="field" name="planstatus"/>
+      <column width="-1" hidden="0" type="field" name="typePlan"/>
+      <column width="-1" hidden="0" type="field" name="versieIMRO"/>
+      <column width="-1" hidden="0" type="field" name="verwijzingNaarObjectgerichteTekst"/>
+      <column width="-1" hidden="0" type="field" name="verwijzingNaarTekst"/>
+      <column width="-1" hidden="0" type="field" name="dossierID"/>
+      <column width="-1" hidden="0" type="field" name="dossierStatus"/>
+      <column width="-1" hidden="0" type="field" name="datum"/>
+      <column width="-1" hidden="0" type="field" name="verwijzingNaarExternPlan"/>
+      <column width="-1" hidden="1" type="actions"/>
     </columns>
   </attributetableconfig>
   <conditionalstyles>
@@ -977,46 +1047,46 @@ def my_form_open(dialog, layer, feature):
   <featformsuppress>0</featformsuppress>
   <editorlayout>generatedlayout</editorlayout>
   <editable>
-    <field editable="1" name="artikelnummer"/>
-    <field editable="1" name="bestemmingsvlak"/>
-    <field editable="1" name="datum"/>
-    <field editable="1" name="dossierID"/>
-    <field editable="1" name="dossierStatus"/>
-    <field editable="1" name="fid"/>
-    <field editable="1" name="gebiedsaanduidinggroep"/>
-    <field editable="1" name="historisch"/>
-    <field editable="1" name="hoofdfuncties"/>
-    <field editable="1" name="identificatie"/>
-    <field editable="1" name="naam"/>
-    <field editable="1" name="ondergeschikteFuncties"/>
-    <field editable="1" name="plangebied"/>
-    <field editable="1" name="planstatus"/>
-    <field editable="1" name="typePlan"/>
-    <field editable="1" name="versieIMRO"/>
-    <field editable="1" name="verwijzingNaarExternPlan"/>
-    <field editable="1" name="verwijzingNaarObjectgerichteTekst"/>
-    <field editable="1" name="verwijzingNaarTekst"/>
+    <field name="artikelnummer" editable="1"/>
+    <field name="bestemmingsvlak" editable="1"/>
+    <field name="datum" editable="1"/>
+    <field name="dossierID" editable="1"/>
+    <field name="dossierStatus" editable="1"/>
+    <field name="fid" editable="1"/>
+    <field name="gebiedsaanduidinggroep" editable="1"/>
+    <field name="historisch" editable="1"/>
+    <field name="hoofdfuncties" editable="1"/>
+    <field name="identificatie" editable="1"/>
+    <field name="naam" editable="1"/>
+    <field name="ondergeschikteFuncties" editable="1"/>
+    <field name="plangebied" editable="1"/>
+    <field name="planstatus" editable="1"/>
+    <field name="typePlan" editable="1"/>
+    <field name="versieIMRO" editable="1"/>
+    <field name="verwijzingNaarExternPlan" editable="1"/>
+    <field name="verwijzingNaarObjectgerichteTekst" editable="1"/>
+    <field name="verwijzingNaarTekst" editable="1"/>
   </editable>
   <labelOnTop>
-    <field labelOnTop="0" name="artikelnummer"/>
-    <field labelOnTop="0" name="bestemmingsvlak"/>
-    <field labelOnTop="0" name="datum"/>
-    <field labelOnTop="0" name="dossierID"/>
-    <field labelOnTop="0" name="dossierStatus"/>
-    <field labelOnTop="0" name="fid"/>
-    <field labelOnTop="0" name="gebiedsaanduidinggroep"/>
-    <field labelOnTop="0" name="historisch"/>
-    <field labelOnTop="0" name="hoofdfuncties"/>
-    <field labelOnTop="0" name="identificatie"/>
-    <field labelOnTop="0" name="naam"/>
-    <field labelOnTop="0" name="ondergeschikteFuncties"/>
-    <field labelOnTop="0" name="plangebied"/>
-    <field labelOnTop="0" name="planstatus"/>
-    <field labelOnTop="0" name="typePlan"/>
-    <field labelOnTop="0" name="versieIMRO"/>
-    <field labelOnTop="0" name="verwijzingNaarExternPlan"/>
-    <field labelOnTop="0" name="verwijzingNaarObjectgerichteTekst"/>
-    <field labelOnTop="0" name="verwijzingNaarTekst"/>
+    <field name="artikelnummer" labelOnTop="0"/>
+    <field name="bestemmingsvlak" labelOnTop="0"/>
+    <field name="datum" labelOnTop="0"/>
+    <field name="dossierID" labelOnTop="0"/>
+    <field name="dossierStatus" labelOnTop="0"/>
+    <field name="fid" labelOnTop="0"/>
+    <field name="gebiedsaanduidinggroep" labelOnTop="0"/>
+    <field name="historisch" labelOnTop="0"/>
+    <field name="hoofdfuncties" labelOnTop="0"/>
+    <field name="identificatie" labelOnTop="0"/>
+    <field name="naam" labelOnTop="0"/>
+    <field name="ondergeschikteFuncties" labelOnTop="0"/>
+    <field name="plangebied" labelOnTop="0"/>
+    <field name="planstatus" labelOnTop="0"/>
+    <field name="typePlan" labelOnTop="0"/>
+    <field name="versieIMRO" labelOnTop="0"/>
+    <field name="verwijzingNaarExternPlan" labelOnTop="0"/>
+    <field name="verwijzingNaarObjectgerichteTekst" labelOnTop="0"/>
+    <field name="verwijzingNaarTekst" labelOnTop="0"/>
   </labelOnTop>
   <widgets/>
   <previewExpression>fid</previewExpression>

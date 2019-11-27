@@ -233,13 +233,7 @@
     <constraint field="verwijzingNaarExternPlan" exp="" desc=""/>
   </constraintExpressions>
   <expressionfields/>
-  <attributeactions>
-    <defaultAction value="{00000000-0000-0000-0000-000000000000}" key="Canvas"/>
-    <actionsetting type="1" capture="0" name="Open text link(s) in browser " notificationMessage="" shortTitle="" icon="" action="&#xa;from qgis.core import QgsMessageLog&#xa;from qgis.PyQt.QtGui import QDesktopServices&#xa;from qgis.PyQt.QtCore import QUrl&#xa;&#xa;urls = &quot;&quot;&#xa;if &quot;[%verwijzingNaarTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarTekst%]&quot;&#xa;elif &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;:&#xa;    urls = &quot;[%verwijzingNaarObjectgerichteTekst%]&quot;&#xa;&#xa;for url in urls.split(','):&#xa;    QDesktopServices().openUrl(QUrl(url))&#xa;" id="{03699e88-2351-4a80-9584-03c059270e8d}" isEnabledOnlyWhenEditable="0">
-      <actionScope id="Canvas"/>
-      <actionScope id="Feature"/>
-    </actionsetting>
-  </attributeactions>
+ 
   <attributetableconfig sortOrder="0" actionWidgetStyle="dropDown" sortExpression="">
     <columns>
       <column type="field" name="fid" hidden="0" width="-1"/>
