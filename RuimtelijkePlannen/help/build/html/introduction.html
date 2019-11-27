@@ -60,7 +60,7 @@
 <p>The plan is added from the RuimtelijkePlannen WFS services, so all data is available to you.</p>
 <div class="section" id="open-associated-texts">
 <h3>Open associated texts<a class="headerlink" href="#open-associated-texts" title="Permalink to this headline">¶</a></h3>
-<p>Some object in the map have associated texts. These can be opened by using the action button (this button should be next to the identify button). First choose the action “Open text link(s) in browser” and then click an object in the map which has associated texts. These texts will be opened in a web browser.</p>
+<p>Objects in some layers have associated texts. If so, these can be opened by using the action button (this button should be next to the identify button). First choose the action “Open text link(s) in browser” and then click an object in the map which has associated texts. These texts will be opened in a web browser.</p>
 <p><strong>Warning</strong>: This can sometimes open many documents.</p>
 </div>
 </div>
@@ -104,8 +104,11 @@
 <p>The settings dialog allows you to select a default style which is applied to the spatial zoning plan when adding it to the project.</p>
 <div class="section" id="adding-styles">
 <h3>Adding styles<a class="headerlink" href="#adding-styles" title="Permalink to this headline">¶</a></h3>
-<p>In the plugin folder you will find a folder named <cite>styles</cite>. Each sub folder in  the folder styles contains a style which can be chosen in the settings dialog.</p>
-<p>To create your own style, copy one of these folders and adapt the style files to your wishes.</p>
+<p>First you need to locate the plugin folder. You can do this via the QGIS menu <cite>Settings</cite> -&gt;  <cite>User Profiles</cite> -&gt; <cite>Open Active Profile Folder</cite>. A file manager will open your profile folder. Browse to <cite>python/plugins/RuimtelijkePlannen</cite>.</p>
+<p>In the plugin folder you will find a folder named <cite>styles</cite>. Each sub folder in  the folder <cite>styles</cite> contains a style which can be chosen in the settings dialog.</p>
+<p>To create your own style, copy one of these folders and adapt the style files to your wishes. This can be done by saving a style from the <cite>Symbology</cite> tab on the layer properties menu. At the bottom of this tab you’ll find a <cite>Style</cite> button which, when clicked, gives the option to save the style.
+Please make sure not to save the attribute actions when saving the style!</p>
+<p>Please make sure to keep a backup of your style(s) folder somewhere as these get deleted when you install a new version of the plugin.</p>
 </div>
 </div>
 </div>
