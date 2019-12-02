@@ -33,6 +33,9 @@ Objects in some layers have associated texts. If so, these can be opened by usin
 Limitations
 ===========
 
+Supported plan types
+''''''''''''''''''''
+
 The following plan types as used by the RuimtelijkePlannen services are supported by this plugin:
 
  - 'aanwijzingsbesluit',
@@ -60,6 +63,12 @@ The following plan types as used by the RuimtelijkePlannen services are NOT supp
  - 'provinciale verordening',
  - 'regeling',
  - 'structuurvisie'
+
+
+Styles
+''''''
+
+It is not fully documented which classes may appear in certain layers. A white style named 'anders' catching all not styled classes has been added so that it is visible that a proper style is missing for that class.
 
 
 Settings
