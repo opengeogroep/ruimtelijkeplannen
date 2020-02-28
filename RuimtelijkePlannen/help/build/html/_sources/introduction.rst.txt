@@ -16,7 +16,11 @@ The plug-in provides a simple way to add a spatial zoning plan (RuimtelijkPlan) 
 Usage
 =====
 
-First zoom the map to your area of interest. Then click the RP icon in the RuimtelijkePlannen toolbar, followed by a click in the map. A list of (the supported) spatial zoning plans in that location is shown. Double click one of the plans to add it to the map.
+First zoom the map to your area of interest. Then click the RP icon in the RuimtelijkePlannen toolbar, followed by a click in the map. A list of (the supported) spatial zoning plans in that location is shown. 
+
+The plans are ordered by importance as determined by the RuimtelijkePlannen 'keuzehulp'. The 'Status' column has a tooltip (hover with the mouse) which shows some information on the plan, the importance of the plan also in relation to the other plans.
+
+Double click one of the plans to add it to the map.
 
 Alternatively you can add a plan with a known IMRO-IDN by typing the IMRO-IDN in the textbox next to the RP icon.
 

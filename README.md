@@ -10,12 +10,15 @@ De kaartlagen worden toegevoegd vanuit de Web Feature Service (WFS) van het kopp
 
 ### Plan toevoegen middels klikken in de kaart ###
 Door eerst het `RP` icoontje aan te klikken en daarna in de kaart te klikken verschijnt een lijst met plannen. Dit zijn alle plannen die NIET behoren tot een van de volgende typen:
+
   - amvb
   - provinciale verordening
   - regeling
   - structuurvisie
 
-Middels dubbelklikken op een van de regels in de lijst wordt het plan toegevoegd aan het QGIS project.
+De plannen worden getoond op volgorde van belangrijkheid zoals bij de keuzehulp van [ruimtelijkeplannen.nl](https://ruimtelijkeplannen.nl). Aan de status kolom van de lijst is een *tooltip* toegevoegd, waarin de uitleg van de keuzehulp is opgenomen.
+
+Middels dubbelklikken op een van de regels in de lijst wordt het plan vervolgens toegevoegd aan het QGIS project.
 
 ### Plan toevoegen middels IMRO-idn ###
 
@@ -33,8 +36,8 @@ Aan elke laag is door de plugin ook een zogenaamde 'actie' gekoppeld. Door eerst
 Dit project is een OpenSource project, waarbij verschillende partijen hebben bijgedragen aan de ontwikkeling:
 
   - [Provincie Zeeland](https://www.zeeland.nl) zorgde voor de eerste versie in QGIS2 en QGIS3.
-  - [LBP|SIGHT](https://www.lbpsight.nl/) financierde de uitbreiding van de plantypen en het gebruik van meerdere stijlen.
-  - [LandGoed](https://landgoed.it/) sponsort de help functionaleit en het fixen van bugs .
+  - [LBP|SIGHT](https://www.lbpsight.nl/) financierde de uitbreiding van de plantypen, het gebruik van meerdere stijlen en de integratie van de keuzehulp.
+  - [LandGoed](https://landgoed.it/) sponsort de help functionaleit en het fixen van bugs.
   - [OpenGeoGroep](https://opengeogroep.nl/) zorgt voor het beheer van de plugin in de QGIS plugins repository.
 
 

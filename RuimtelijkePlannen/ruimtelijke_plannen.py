@@ -35,7 +35,7 @@ from qgis.core import   QgsProject, QgsVectorLayer, QgsLayerTreeLayer, \
                         QgsCoordinateReferenceSystem, QgsCoordinateTransform
 from qgis.PyQt import QtCore
 from qgis.PyQt.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, \
-                             QSortFilterProxyModel, QUrl
+                             QSortFilterProxyModel, QUrl, QSize
 
 from qgis.PyQt.QtWidgets import QAction, QLineEdit, QAbstractItemView, \
                                 QCompleter, QMessageBox, QHeaderView, QApplication
@@ -392,12 +392,23 @@ class RuimtelijkePlannen(object):
         self.dlg.treeView_results.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.dlg.treeView_results.setSortingEnabled(True)
         self.dlg.treeView_results.doubleClicked.connect(self.loadRPplan)
-        
+
+        # have an info icon at hand for keuzehulp
+        self.infoIcon = QIcon(':/plugins/RuimtelijkePlannen/info.png')
+                
         # have the right crs at hand
         self.rp_crs = QgsCoordinateReferenceSystem(28992)
         
-        # urls to RuimtelijkePlannen
-        self.rp_search_url = "https://www.ruimtelijkeplannen.nl/web-roo/rest/search"
+        ## urls to RuimtelijkePlannen
+        ## this one is the traditional one
+        # self.rp_search_url = "https://www.ruimtelijkeplannen.nl/web-roo/rest/search"
+        # self.rp_search_id_resource = "/plan/id/"
+        # self.rp_search_xy_resource = "/plannen/xy/"
+        ## this one is new and has more metadata with the "keuzehulp"!
+        self.rp_search_url = "https://www.ruimtelijkeplannen.nl/plannenservice"
+        self.rp_search_id_resource = "/plannen/identificatie/"
+        self.rp_search_xy_resource = "/plannen/xy/"
+        
         self.rp_wfs_url = "https://afnemers.ruimtelijkeplannen.nl/afnemers2012/services"
         
         # the following lists of plantypes comes from: 
@@ -497,16 +508,23 @@ class RuimtelijkePlannen(object):
     def addFromIdn(self, search_string):
         '''adds plan from idn'''
         self.toolbarSearch.clear()
-        url = self.rp_search_url + "/plan/id/" + search_string
+        url = self.rp_search_url + self.rp_search_id_resource + search_string
+        QgsMessageLog.logMessage(u'Query: ' + str(url), 'RuimtelijkePlannen')
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
         (response, content) = self.nam.request(url)
         self.rp = json.loads(content.decode("utf-8"))
+        
         QApplication.restoreOverrideCursor()
-        if "ErrorType" in self.rp:
+        if "ErrorType" in self.rp \
+        or ('aantal' in self.rp and self.rp['aantal'] == 0):
             self.iface.messageBar().pushMessage("Error",
-                self.tr(u'Plan not found.') + self.rp["ErrorDescription"], 
+                self.tr(u'Plan not found.'), 
                 level = Qgis.Critical)
-        elif not self.rp["typePlan"] in self.rp_supported_planTypes:
+            return
+        if 'resultaat' in self.rp:
+            # we are using the keuzeHulp
+            self.rp = self.rp['plannen'][0]        
+        if not self.rp["typePlan"] in self.rp_supported_planTypes:
             self.iface.messageBar().pushMessage("Error",
                 self.tr(u'Plan type not supported.'), 
                 level = Qgis.Critical)
@@ -572,20 +590,37 @@ class RuimtelijkePlannen(object):
     def loadRPplan(self, index):
         '''slot for row in search results widget'''
         self.dlg.hide()
-        self.addRPplan_WFS( plangebied = index.sibling(index.row(),0).data(), 
-                            plantype = index.sibling(index.row(),2).data())
+        self.addRPplan_WFS( plangebied = index.sibling(index.row(),1).data(), 
+                            plantype = index.sibling(index.row(),3).data())
 
-    def addSourceRow(self, plan):
+    def addSourceRow(self, nr, plan, keuze_hulp = None):
         '''adds plan to search results widget'''
         if plan["typePlan"] in self.rp_supported_planTypes:
+            nr = QStandardItem(str(nr + 1))
             planId = QStandardItem(plan["identificatie"])
-            planStatus = QStandardItem(plan["planStatus"])
+            if keuze_hulp:
+                planStatus = QStandardItem(self.infoIcon, plan["planStatus"])
+                f = planStatus.font()
+                f.setUnderline(True)
+                planStatus.setFont(f)
+                planStatus.setToolTip('%s: %s' % (
+                                        keuze_hulp["positieTekst"],
+                                        keuze_hulp["keuzeHulpTekst"])
+                                     )
+            else:
+              planStatus = QStandardItem(plan["planStatus"])
             planNaam = QStandardItem(plan["naam"])
             planType = QStandardItem(plan["typePlan"])
             #planGebiedType = QStandardItem(plan["planGebiedType"])
             # not yet(?) in use by this plugin
-            self.sourceModel.appendRow( [ planId, planStatus, planType, planNaam] )
+            self.sourceModel.appendRow( [ nr, planId, planStatus, planType, planNaam] )
+            
+    def addSourceRowFromKeuzeHulp(self, nr, plan_en_keuze):
+        '''adds plan to search results widget'''
+        keuze_hulp = plan_en_keuze['keuzeHulp']
+        plan = plan_en_keuze['planDto']
 
+        self.addSourceRow(nr, plan, keuze_hulp)
             
     def getRPplannenByPoint(self, event):
         '''Queries ruimtelijkeplannen by point and shows results on widget.'''
@@ -600,7 +635,7 @@ class RuimtelijkePlannen(object):
                         event.pos().y())))
 
         self.sourceModel.clear()
-        url = self.rp_search_url + "/plannen/xy/" + str(xy.x()) + "/" + str(xy.y())
+        url = self.rp_search_url + self.rp_search_xy_resource + str(xy.x()) + "/" + str(xy.y())
         QgsMessageLog.logMessage(u'Query: ' + str(url), 'RuimtelijkePlannen')
 
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor) 
@@ -614,18 +649,26 @@ class RuimtelijkePlannen(object):
             QApplication.restoreOverrideCursor()
             return
 
-        for plan in self.rp["plannen"]:
-            self.addSourceRow(plan)
+        if 'plannen' in self.rp:
+            for nr, plan in enumerate(self.rp["plannen"]):
+                self.addSourceRow(nr, plan)
+        else:
+            for nr, plan_en_keuze in enumerate(self.rp["keuzeHulpPlannen"]):
+                self.addSourceRowFromKeuzeHulp(nr, plan_en_keuze)
 
-        self.sourceModel.setHeaderData(0, QtCore.Qt.Horizontal, "Identification")
-        self.sourceModel.horizontalHeaderItem(0).setTextAlignment(QtCore.Qt.AlignLeft)
-        self.sourceModel.setHeaderData(1, QtCore.Qt.Horizontal, "Status")
-        self.sourceModel.setHeaderData(2, QtCore.Qt.Horizontal, "Type")
-        self.sourceModel.setHeaderData(3, QtCore.Qt.Horizontal, "Name")
+        self.sourceModel.setHeaderData(0, QtCore.Qt.Horizontal, "Nr")
+        self.sourceModel.setHeaderData(1, QtCore.Qt.Horizontal, "Identification")
+        self.sourceModel.horizontalHeaderItem(1).setTextAlignment(QtCore.Qt.AlignLeft)
+        self.sourceModel.setHeaderData(2, QtCore.Qt.Horizontal, "Status")
+        self.sourceModel.setHeaderData(3, QtCore.Qt.Horizontal, "Type")
+        self.sourceModel.setHeaderData(4, QtCore.Qt.Horizontal, "Name")
+        self.dlg.treeView_results.setColumnHidden(0, True)
         self.dlg.treeView_results.resizeColumnsToContents()
         self.dlg.treeView_results.horizontalHeader().setSectionResizeMode(1, QHeaderView.Stretch)
         self.dlg.treeView_results.setSelectionMode(1)
         self.dlg.treeView_results.selectRow(0)
-        self.dlg.treeView_results.sortByColumn(2, QtCore.Qt.AscendingOrder)
+        # sort on order of the keuzehulp, instead of status.
+        #self.dlg.treeView_results.sortByColumn(2, QtCore.Qt.AscendingOrder)
+        self.dlg.treeView_results.sortByColumn(0, QtCore.Qt.AscendingOrder)
         QApplication.restoreOverrideCursor()
         self.dlg.show()
