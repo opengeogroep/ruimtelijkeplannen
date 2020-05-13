@@ -656,6 +656,10 @@ class RuimtelijkePlannen(object):
             for nr, plan_en_keuze in enumerate(self.rp["keuzeHulpPlannen"]):
                 self.addSourceRowFromKeuzeHulp(nr, plan_en_keuze)
 
+        if not self.sourceModel.rowCount():
+            QApplication.restoreOverrideCursor()
+            return 
+
         self.sourceModel.setHeaderData(0, QtCore.Qt.Horizontal, "Nr")
         self.sourceModel.setHeaderData(1, QtCore.Qt.Horizontal, "Identification")
         self.sourceModel.horizontalHeaderItem(1).setTextAlignment(QtCore.Qt.AlignLeft)
