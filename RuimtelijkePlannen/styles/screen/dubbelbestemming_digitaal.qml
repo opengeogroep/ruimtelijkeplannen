@@ -130,7 +130,7 @@
               <prop k="angle" v="0"/>
               <prop k="chr" v="+"/>
               <prop k="color" v="0,0,0,255"/>
-              <prop k="font" v="Dingbats"/>
+              <prop k="font" v="Arial"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
@@ -214,7 +214,7 @@
               <prop k="angle" v="0"/>
               <prop k="chr" v="~"/>
               <prop k="color" v="0,0,0,255"/>
-              <prop k="font" v="Dingbats"/>
+              <prop k="font" v="Arial"/>
               <prop k="horizontal_anchor_point" v="1"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,3"/>

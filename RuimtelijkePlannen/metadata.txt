@@ -12,7 +12,7 @@ name=Ruimtelijke Plannen
 qgisMinimumVersion=3.0
 qgisMaximumVersion=3.99
 description=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl
-version=3.5.0
+version=3.5.2
 author=Jos Rijborz - Provincie Zeeland (for QGIS2), Raymond Nijssen - OpenGeoGroep (for QGSI2), Marco Duiker - OpenGeoGroep
 email=info@opengeogroep.nl
 
@@ -25,7 +25,7 @@ repository=https://github.com/opengeogroep/ruimtelijkeplannen
 # Recommended items:
 
 # Uncomment the following line and add your changelog:
-changelog= Added the ruimtelijke plannen keuzehulp so that plans are ordered by importance. By hovering the status column the ruimtelijke plannen keuzehulp explanation is shown.
+changelog= New URL and referer for RP service
 
 # Tags are comma separated with spaces allowed
 tags=RO-Online,ruimtelijkeplannen.nl,Ruimtelijke,Plannen,Bestemmingsplan,zoning plans,IMRO

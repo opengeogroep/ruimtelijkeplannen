@@ -405,7 +405,9 @@ class RuimtelijkePlannen(object):
         # self.rp_search_id_resource = "/plan/id/"
         # self.rp_search_xy_resource = "/plannen/xy/"
         ## this one is new and has more metadata with the "keuzehulp"!
-        self.rp_search_url = "https://www.ruimtelijkeplannen.nl/plannenservice"
+        #self.rp_search_url = "https://www.ruimtelijkeplannen.nl/plannenservice"
+        self.rp_search_url = "https://afnemers.ruimtelijkeplannen.nl/plannenservice"
+        self.rp_search_headers = {"Referer": "https://plugins.qgis.org/plugins/RuimtelijkePlannen/"}
         self.rp_search_id_resource = "/plannen/identificatie/"
         self.rp_search_xy_resource = "/plannen/xy/"
         
@@ -440,6 +442,38 @@ class RuimtelijkePlannen(object):
             'regeling',
             'structuurvisie'
             ]
+
+        # There seem te be more plan types. The following list comes from
+        # Kadaster internal documenation
+        # This list should be merged with the above
+        #* Mother plan: no; dedicated procedure (dossier): yes
+
+              #"bestemmingsplan"
+              #"Chw bestemmingsplan"
+              #"gemeentelijk plan; bestemmingsplan artikel 10"
+              #"rijksbestemmingsplan"
+              #"inpassingsplan"
+              #"beheersverordening"
+              #"aanwijzingsbesluit"
+              #"reactieve aanwijzing"
+              #"exploitatieplan"
+
+        #* Mother plan: yes; dedicated procedure (dossier): yes
+
+              #"wijzigingsplan"
+              #"gemeentelijk plan; wijzigingsplan artikel 11"
+              #"uitwerkingsplan"
+              #"gemeentelijk plan; uitwerkingsplan artikel 11"
+              #"omgevingsvergunning"
+              #"projectbesluit"
+              #"tijdelijke ontheffing buitenplans"
+
+        #* Mother plan: yes; dedicated procedure: no (potentially in dossier mother plan)
+
+              #"voorbereidingsbesluit"
+              #"gemeentelijk plan; voorbereidingsbesluit"
+              #"gerechtelijke uitspraak"
+
 
         # layer action on RuimtelijkePlannen layers to show links to text
         self.rp_layer_action = QgsAction(QgsAction.GenericPython, 
@@ -511,7 +545,7 @@ class RuimtelijkePlannen(object):
         url = self.rp_search_url + self.rp_search_id_resource + search_string
         QgsMessageLog.logMessage(u'Query: ' + str(url), 'RuimtelijkePlannen')
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
-        (response, content) = self.nam.request(url)
+        (response, content) = self.nam.request(url, headers = self.rp_search_headers)
         self.rp = json.loads(content.decode("utf-8"))
         
         QApplication.restoreOverrideCursor()
@@ -639,7 +673,7 @@ class RuimtelijkePlannen(object):
         QgsMessageLog.logMessage(u'Query: ' + str(url), 'RuimtelijkePlannen')
 
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor) 
-        (response, content) = self.nam.request(url)
+        (response, content) = self.nam.request(url, headers = self.rp_search_headers)
         self.rp = json.loads(content.decode("utf-8"))
 
         if "ErrorType" in self.rp:
