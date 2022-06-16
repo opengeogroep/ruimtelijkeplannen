@@ -1,7 +1,0 @@
-Always upload the zip with plain file name, without the version number to the qgis plugin repository:
-RuimtelijkePlannen.zip
-
-Afterwards, store that zip with version number here:
-RuimtelijkePlannen-0.1.zip
-RuimtelijkePlannen-0.2.zip
-
