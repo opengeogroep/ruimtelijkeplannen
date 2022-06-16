@@ -1,7 +1,7 @@
-# This file contains metadata for your plugin. Since 
-# version 2.0 of QGIS this is the proper way to supply 
-# information about a plugin. The old method of 
-# embedding metadata in __init__.py 
+# This file contains metadata for your plugin. Since
+# version 2.0 of QGIS this is the proper way to supply
+# information about a plugin. The old method of
+# embedding metadata in __init__.py
 # is no longer supported since version 2.0.
 
 # This file should be included when you package your plugin.
@@ -13,7 +13,7 @@ qgisMinimumVersion=3.0
 qgisMaximumVersion=3.99
 description=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl
 version=3.5.2
-author=Jos Rijborz - Provincie Zeeland (for QGIS2), Raymond Nijssen - OpenGeoGroep (for QGSI2), Marco Duiker - OpenGeoGroep
+author=Jos Rijborz - Provincie Zeeland (for QGIS2), Raymond Nijssen - OpenGeoGroep (for QGIS2), Marco Duiker - OpenGeoGroep
 email=info@opengeogroep.nl
 
 about=Plugin for using Dutch online zoning plans from www.ruimtelijkeplannen.nl. Layer actions are defined to open linked texts in a web browser.
@@ -38,4 +38,3 @@ experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
-
